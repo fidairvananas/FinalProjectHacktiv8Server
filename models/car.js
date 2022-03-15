@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Car.belongsTo(models.Model, { foreignKey: "ModelId" });
+      Car.belongsTo(models.Type, { foreignKey: "TypeId" });
       Car.belongsTo(models.Dealer, { foreignKey: "DealerId" });
       Car.hasMany(models.Image, { foreignKey: "CarId" });
       Car.hasOne(models.Inspection, { foreignKey: "CarId" });
@@ -126,15 +126,15 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      ModelId: {
+      TypeId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notNull: {
-            msg: "Model is required",
+            msg: "Type is required",
           },
           notEmpty: {
-            msg: "Model is required",
+            msg: "Type is required",
           },
         },
       },
