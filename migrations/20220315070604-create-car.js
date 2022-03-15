@@ -45,10 +45,10 @@ module.exports = {
         onUpdate: "cascade",
         onDelete: "cascade",
       },
-      ModelId: {
+      TypeId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Models",
+          model: "Types",
           key: "id",
         },
         onUpdate: "cascade",
