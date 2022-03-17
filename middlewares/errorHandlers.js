@@ -24,8 +24,10 @@ const errorHandler = (err, req, res, next) => {
     case "TokenExpiredError":
       res.status(400).json({ message: err.message });
       break;
+    case "BAD_REQUEST":
+      res.status(err.code).json({ message: err.message });
+      break;
     default:
-      console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
       break;
   }
