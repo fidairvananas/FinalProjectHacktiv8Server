@@ -1,0 +1,1002 @@
+[
+  {
+    "YEAR": 1909,
+    "BrandId": 5,
+    "modelName": "modelName T"
+  },
+  {
+    "YEAR": 1980,
+    "BrandId": 5,
+    "modelName": "Mustang"
+  },
+  {
+    "YEAR": 1980,
+    "BrandId": 5,
+    "modelName": "Thunderbird"
+  },
+  {
+    "YEAR": 1980,
+    "BrandId": 3,
+    "modelName": "Citation"
+  },
+  {
+    "YEAR": 1980,
+    "BrandId": 3,
+    "modelName": "Camaro"
+  },
+  {
+    "YEAR": 1980,
+    "BrandId": 6,
+    "modelName": "Civic"
+  },
+  {
+    "YEAR": 1980,
+    "BrandId": 17,
+    "modelName": "Grand Prix"
+  },
+  {
+    "YEAR": 1981,
+    "BrandId": 16,
+    "modelName": "Reliant"
+  },
+  {
+    "YEAR": 1981,
+    "BrandId": 4,
+    "modelName": "Aries"
+  },
+  {
+    "YEAR": 1981,
+    "BrandId": 3,
+    "modelName": "Camaro"
+  },
+  {
+    "YEAR": 1981,
+    "BrandId": 17,
+    "modelName": "Grand Prix"
+  },
+  {
+    "YEAR": 1981,
+    "BrandId": 12,
+    "modelName": "W126"
+  },
+  {
+    "YEAR": 1982,
+    "BrandId": 17,
+    "modelName": "Grand Prix"
+  },
+  {
+    "YEAR": 1982,
+    "BrandId": 3,
+    "modelName": "Camaro"
+  },
+  {
+    "YEAR": 1982,
+    "BrandId": 23,
+    "modelName": "Celica"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 5,
+    "modelName": "Thunderbird"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 5,
+    "modelName": "Mustang"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 12,
+    "modelName": "W126"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 17,
+    "modelName": "6000"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 17,
+    "modelName": "Sunbird"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 17,
+    "modelName": "Grand Prix"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 23,
+    "modelName": "Celica"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 3,
+    "modelName": "Caprice"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 6,
+    "modelName": "Accord"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 19,
+    "modelName": "Alliance"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 11,
+    "modelName": "626"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 11,
+    "modelName": "RX-7"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 24,
+    "modelName": "Golf"
+  },
+  {
+    "YEAR": 1983,
+    "BrandId": 18,
+    "modelName": "944"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "1000"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "6000"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "Sunbird"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "Bonneville"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "Firebird"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "Parisienne"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "Grand Prix"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "Fiero"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 17,
+    "modelName": "Firefly"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Bronco II"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Laser"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Thunderbird"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "EXP"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Ranger"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Escort"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Tempo"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "LTD"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "F250"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "F150"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "E250"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "LTD Crown Victoria"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Bronco"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "E150"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 5,
+    "modelName": "Mustang"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 15,
+    "modelName": "Space"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 15,
+    "modelName": "Galant"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 15,
+    "modelName": "Mirage"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 15,
+    "modelName": "Starion"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 15,
+    "modelName": "Pajero"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 15,
+    "modelName": "Cordia"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 15,
+    "modelName": "Tredia"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 21,
+    "modelName": "Brat"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 12,
+    "modelName": "S-Class"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 12,
+    "modelName": "E-Class"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 12,
+    "modelName": "W201"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 12,
+    "modelName": "SL-Class"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 13,
+    "modelName": "Topaz"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 13,
+    "modelName": "Grand Marquis"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 13,
+    "modelName": "Lynx"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 13,
+    "modelName": "Capri"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 13,
+    "modelName": "Cougar"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 13,
+    "modelName": "Marquis"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 9,
+    "modelName": "Esprit Turbo"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 24,
+    "modelName": "Jetta"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 24,
+    "modelName": "Golf"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 24,
+    "modelName": "Vanagon"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 24,
+    "modelName": "Scirocco"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 24,
+    "modelName": "Quantum"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 2,
+    "modelName": "Electra"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 2,
+    "modelName": "Century"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 2,
+    "modelName": "Skyhawk"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 8,
+    "modelName": "Town Car"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 8,
+    "modelName": "Continental"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 8,
+    "modelName": "Mark VII"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 10,
+    "modelName": "Quattroporte"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 10,
+    "modelName": "Biturbo"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 20,
+    "modelName": "900"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 1,
+    "modelName": "5000S"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 6,
+    "modelName": "Accord"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 6,
+    "modelName": "CR-X"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 6,
+    "modelName": "Prelude"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 18,
+    "modelName": "944"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 4,
+    "modelName": "Daytona"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 22,
+    "modelName": "SJ 410"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 11,
+    "modelName": "626"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 11,
+    "modelName": "GLC"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 11,
+    "modelName": "RX-7"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 23,
+    "modelName": "Celica"
+  },
+  {
+    "YEAR": 1984,
+    "BrandId": 3,
+    "modelName": "Corvette"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "Somerset"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "Electra"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "Century"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "LeSabre"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "Riviera"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "Skyhawk"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "Regal"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 2,
+    "modelName": "Skylark"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "E-Series"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Bronco II"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Bronco"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Tempo"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "F-Series"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Laser"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "LTD Crown Victoria"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Ranger"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Mustang"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "LTD"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Escort"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "EXP"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 5,
+    "modelName": "Thunderbird"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Starion"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Mirage"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Truck"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Chariot"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Tredia"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Cordia"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Pajero"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 24,
+    "modelName": "Jetta"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 24,
+    "modelName": "GTI"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 24,
+    "modelName": "Cabriolet"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 24,
+    "modelName": "Golf"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 24,
+    "modelName": "Passat"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 24,
+    "modelName": "Scirocco"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 24,
+    "modelName": "Type 2"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 12,
+    "modelName": "W201"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 12,
+    "modelName": "S-Class"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 12,
+    "modelName": "E-Class"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 12,
+    "modelName": "SL-Class"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 3,
+    "modelName": "Camaro"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 3,
+    "modelName": "Corvette"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 20,
+    "modelName": "900"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 1,
+    "modelName": "4000s"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 1,
+    "modelName": "Quattro"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 1,
+    "modelName": "5000S"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 1,
+    "modelName": "Coupe GT"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 7,
+    "modelName": "Countach"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 13,
+    "modelName": "Topaz"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 13,
+    "modelName": "Marquis"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 13,
+    "modelName": "Grand Marquis"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 13,
+    "modelName": "Lynx"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 13,
+    "modelName": "Cougar"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 13,
+    "modelName": "Capri"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 11,
+    "modelName": "626"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 11,
+    "modelName": "RX-7"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 11,
+    "modelName": "Familia"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 11,
+    "modelName": "B2000"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "1000"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "6000"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Bonneville"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Parisienne"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Sunbird"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Fiero"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Grand Am"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Firebird"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Grand Prix"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 17,
+    "modelName": "Firefly"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 21,
+    "modelName": "XT"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 21,
+    "modelName": "BRAT"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 21,
+    "modelName": "Leone"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 14,
+    "modelName": "XR4Ti"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 15,
+    "modelName": "Galant"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 6,
+    "modelName": "CR-X"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 6,
+    "modelName": "Civic"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 6,
+    "modelName": "Accord"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 6,
+    "modelName": "Prelude"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 10,
+    "modelName": "Biturbo"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 10,
+    "modelName": "Quattroporte"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 8,
+    "modelName": "Town Car"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 8,
+    "modelName": "Continental"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 8,
+    "modelName": "Continental Mark VII"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 16,
+    "modelName": "Voyager"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 18,
+    "modelName": "911"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 18,
+    "modelName": "928"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 18,
+    "modelName": "944"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 22,
+    "modelName": "Cultus"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 22,
+    "modelName": "SJ"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 23,
+    "modelName": "MR2"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 9,
+    "modelName": "Esprit"
+  },
+  {
+    "YEAR": 1985,
+    "BrandId": 4,
+    "modelName": "Caravan"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 10,
+    "modelName": "Biturbo"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 10,
+    "modelName": "Quattroporte"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 21,
+    "modelName": "XT"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 21,
+    "modelName": "Leone"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 21,
+    "modelName": "BRAT"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 3,
+    "modelName": "Corvette"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 5,
+    "modelName": "Thunderbird"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 5,
+    "modelName": "F-Series"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 5,
+    "modelName": "Bronco II"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 5,
+    "modelName": "Ranger"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 5,
+    "modelName": "E-Series"
+  },
+  {
+    "YEAR": 1986,
+    "BrandId": 5,
+    "modelName": "Taurus"
+  }
+]
