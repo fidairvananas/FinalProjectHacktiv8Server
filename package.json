@@ -4,7 +4,7 @@
   "description": "Repsotiory untuk srver final project",
   "main": "app.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --runInBand --coverage",
+    "test": "jest --detectOpenHandles --forceExit --runInBand",
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www"
   },
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Jubel13/FinalProjectHacktiv8Server#readme",
   "dependencies": {
+    "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
