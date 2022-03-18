@@ -94,14 +94,6 @@ const addCar = async (req, res, next) => {
         };
       });
 
-    if (!images.length) {
-      throw {
-        code: 400,
-        name: "BAD_REQUEST",
-        message: "Image is required",
-      };
-    }
-
     const newImage = await Image.bulkCreate(images, {
       returning: true,
       transaction: t,
@@ -255,6 +247,14 @@ const editcar = async (req, res, next) => {
       { where: { id: foundCar.id }, returning: true, transaction: t }
     );
 
+    if (!image) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Image is required",
+      };
+    }
+
     if (image.length) {
       await Image.destroy(
         {
@@ -273,14 +273,6 @@ const editcar = async (req, res, next) => {
             image: el,
           };
         });
-
-      if (!images.length) {
-        throw {
-          code: 400,
-          name: "BAD_REQUEST",
-          message: "Image is required",
-        };
-      }
 
       const newImage = await Image.bulkCreate(images, {
         returning: true,

@@ -2,6 +2,7 @@ const app = require("../app");
 const request = require("supertest");
 const { sequelize, Dealer } = require("../models");
 const { queryInterface } = sequelize;
+const { login } = require("../controllers/dealerController");
 
 let newDealer = {
   name: "Dealer",
@@ -311,37 +312,20 @@ describe("Dealer login routes", () => {
       password: "12345",
     };
 
-    it("should return correct response (401) when dealer is not registered", (done) => {
-      request(app)
-        .post("/dealers/login")
-        .send(dealer)
-        .then((res) => {
-          expect(res.status).toBe(401);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty("message", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
+    test("should return correct response (401) when dealer is not registered", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await login(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
     });
 
-    it("should return correct response (401) when password is not correct", (done) => {
-      request(app)
-        .post("/dealers/login")
-        .send({
-          email: "test@mail.com",
-          password: "1234",
-        })
-        .then((res) => {
-          expect(res.status).toBe(401);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty("message", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
+    test("should return correct response (401) when dealer password is not correct", async () => {
+      const mReq = { body: { email: "dealer@mail.com", password: "12" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await login(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
     });
   });
 });
@@ -786,7 +770,7 @@ describe("Car routes", () => {
   });
 
   describe("PUT /cars/:id - failed test", () => {
-    test("should return correct response (404) when car is updated", (done) => {
+    test("should return correct response (404) car is not found", (done) => {
       request(app)
         .put("/cars/10")
         .send({
@@ -809,6 +793,31 @@ describe("Car routes", () => {
         })
         .catch((err) => {
           console.log(err);
+          done(err);
+        });
+    });
+
+    test("should return correct response (400) when image field is missing", (done) => {
+      request(app)
+        .put("/cars/1")
+        .send({
+          name: "Ford Mustang G5",
+          description: "This is sport car",
+          fuel: "Solar",
+          seats: 2,
+          mileage: 12000,
+          price: 1000000,
+          color: "black",
+          yearMade: "1989-04-23T18:25:43.511Z",
+          TypeId: 5,
+        })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(400);
+          expect(res.body).toHaveProperty("message", "Image is required");
+          done();
+        })
+        .catch((err) => {
           done(err);
         });
     });

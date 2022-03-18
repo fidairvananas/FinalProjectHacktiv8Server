@@ -2,6 +2,7 @@ const app = require("../app");
 const request = require("supertest");
 const { sequelize, Admin } = require("../models");
 const { queryInterface } = sequelize;
+const { login } = require("../controllers/adminController");
 
 let newAdmin = {
   name: "Admin",
@@ -240,40 +241,22 @@ describe("Admin login routes", () => {
   });
 
   describe("POST /admins/login - failed test", () => {
-    test("should return correct response (401) when admin is not registered", (done) => {
-      request(app)
-        .post("/dealers/login")
-        .send({
-          email: "test@mail.com",
-          password: "12345",
-        })
-        .then((res) => {
-          expect(res.status).toBe(401);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty("message", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
+    test("should return correct response (401) when admin is not registered", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await login(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
     });
 
-    test("should return correct response (401) when password is not correct", (done) => {
-      request(app)
-        .post("/dealers/login")
-        .send({
-          email: "admin@mail.com",
-          password: "123",
-        })
-        .then((res) => {
-          expect(res.status).toBe(401);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty("message", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
+    test("should return correct response (401) when password is wrong", async () => {
+      const mReq = { body: { email: "admin@mail.com", password: "123" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await login(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
     });
   });
 });
@@ -310,6 +293,20 @@ describe("Inspection test", () => {
         .then((res) => {
           expect(res.status).toBe(401);
           expect(res.body).toHaveProperty("message", "Invalid token or user");
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (404) when car is not found", (done) => {
+      request(app)
+        .patch("/cars/10")
+        .send({ passedInspection: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(404);
           done();
         })
         .catch((err) => {

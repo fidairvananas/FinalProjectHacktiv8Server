@@ -9,40 +9,18 @@ const {
 } = require("../controllers/inspectionController");
 
 const adminAuthentication = require("../middlewares/adminAuth");
-const adminAuthorization = require("../middlewares/adminAuthorization");
 
-router.patch(
-  "/main/:id",
-  adminAuthentication,
-  adminAuthorization,
-  changeMainInspection
-);
+router.patch("/main/:id", adminAuthentication, changeMainInspection);
 
-router.patch(
-  "/exterior/:id",
-  adminAuthentication,
-  adminAuthorization,
-  changeExterior
-);
+router.patch("/exterior/:id", adminAuthentication, changeExterior);
 
-router.patch(
-  "/interior/:id",
-  adminAuthentication,
-  adminAuthorization,
-  changeInterior
-);
+router.patch("/interior/:id", adminAuthentication, changeInterior);
 
-router.patch(
-  "/roadtest/:id",
-  adminAuthentication,
-  adminAuthorization,
-  changeRoadTest
-);
+router.patch("/roadtest/:id", adminAuthentication, changeRoadTest);
 
 router.patch(
   "/kolong/:id",
   adminAuthentication,
-  adminAuthorization,
   changeKolong
 );
 module.exports = router;
