@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 const { hashPassword } = require("../helpers/bcrypt");
 
 module.exports = (sequelize, DataTypes) => {
-  class Buyer extends Model {
+  class Admin extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,20 +11,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Buyer.hasMany(models.BoughtHistory, { foreignKey: "BuyerId" });
     }
   }
-  Buyer.init(
+  Admin.init(
     {
-      username: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: {
-            msg: "Username is required",
+            msg: "Name is required",
           },
           notEmpty: {
-            msg: "Username is required",
+            msg: "Name is required",
+          },
+        },
+      },
+      role: DataTypes.STRING,
+      phoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Phone is required",
+          },
+          notEmpty: {
+            msg: "Phone is required",
           },
         },
       },
@@ -63,40 +75,16 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: "Address is required",
-          },
-          notEmpty: {
-            msg: "Address is required",
-          },
-        },
-      },
-      phoneNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: "Phone is required",
-          },
-          notEmpty: {
-            msg: "Phone is required",
-          },
-        },
-      },
     },
     {
       hooks: {
-        beforeCreate: (buyer) => {
-          buyer.password = hashPassword(buyer.password);
+        beforeCreate: (admin) => {
+          admin.password = hashPassword(admin.password);
         },
       },
       sequelize,
-      modelName: "Buyer",
+      modelName: "Admin",
     }
   );
-  return Buyer;
+  return Admin;
 };

@@ -311,7 +311,7 @@ describe("Dealer login routes", () => {
       password: "12345",
     };
 
-    it("should return correct response (401) when user is not registered", (done) => {
+    it("should return correct response (401) when dealer is not registered", (done) => {
       request(app)
         .post("/dealers/login")
         .send(dealer)
