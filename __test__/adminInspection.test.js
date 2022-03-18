@@ -1,12 +1,12 @@
 const app = require("../app");
 const request = require("supertest");
-const { sequelize, Admin } = require("../models");
+const { sequelize, Admin, Interior, Exterior } = require("../models");
 const { queryInterface } = sequelize;
 const { login } = require("../controllers/adminController");
 
 let newAdmin = {
   name: "Admin",
-  phoneNumber: "081123456789",
+  phoneNumber: "081311107954",
   email: "admin@mail.com",
   password: "12345",
 };
@@ -39,6 +39,7 @@ beforeAll((done) => {
     createdAt: new Date(),
     updatedAt: new Date(),
   };
+
   queryInterface
     .bulkInsert("Cars", [data], {})
     .then((res) => {
@@ -264,6 +265,57 @@ describe("Admin login routes", () => {
 // Inspections test
 
 describe("Inspection test", () => {
+  describe("GET /inspections - success test", () => {
+    test("should return correct response (200) when reads all inspections", (done) => {
+      request(app)
+        .get("/inspections")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          expect(res.body[0]).toHaveProperty("Interior", expect.any(Object));
+          expect(res.body[0]).toHaveProperty("Exterior", expect.any(Object));
+          expect(res.body[0]).toHaveProperty("RoadTest", expect.any(Object));
+          expect(res.body[0]).toHaveProperty("Kolong", expect.any(Object));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (200) when reads inspection by id", (done) => {
+      request(app)
+        .get("/inspections/2")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("Interior", expect.any(Object));
+          expect(res.body).toHaveProperty("Exterior", expect.any(Object));
+          expect(res.body).toHaveProperty("RoadTest", expect.any(Object));
+          expect(res.body).toHaveProperty("Kolong", expect.any(Object));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /inspections - failed test", () => {
+    test("should return correct response (404) when inspection is not found", (done) => {
+      request(app)
+        .get("/inspections/20")
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
   describe("PATCH /cars - success test", () => {
     test("should return correct response (200) when admin is authorized to change car inspection status", (done) => {
       request(app)
@@ -479,6 +531,119 @@ describe("Inspection test", () => {
         .then((res) => {
           expect(res.status).toBe(404);
           expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
+// interior test
+
+describe("Interior routes", () => {
+  beforeEach(async () => {
+    let interior = {
+      id: 1,
+      speedometer: false,
+      klakson: false,
+      steeringWheel: false,
+      rearViewMirror: false,
+      dashboard: false,
+      seats: false,
+      gasPedal: false,
+      brakePedal: false,
+      InspectionId: 2,
+    };
+    const newInt = await Interior.create(interior);
+  });
+  afterEach(async () => {
+    await Interior.destroy({ where: { id: 1 } });
+  });
+  describe("PATCH /inspections/interior-detail -- success test", () => {
+    it("should return correct response (200) admin update inspection status", (done) => {
+      request(app)
+        .patch("/inspections/interior-detail/1")
+        .set("access_token", access_token)
+        .send({ speedometer: true, klakson: true, steeringWheel: true })
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH /inspections/exterior-detail -- failed test", () => {
+    it("should return correct response (404) when there is no interior inspection data", (done) => {
+      request(app)
+        .patch("/inspections/interior-detail/100")
+        .set("access_token", access_token)
+        .send({ speedometer: true, klakson: true, steeringWheel: true })
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
+// exterior test
+
+describe("Exterior routes", () => {
+  beforeEach(async () => {
+    let exterior = {
+      id: 1,
+      chassis: true,
+      bumper: true,
+      lights: true,
+      roof: false,
+      spion: false,
+      windShield: false,
+      kacaSamping: false,
+      kacaBelakang: false,
+      tire: false,
+      InspectionId: 2,
+    };
+    const newEx = await Exterior.create(exterior);
+  });
+  afterEach(async () => {
+    await Exterior.destroy({ where: { id: 1 } });
+  });
+  describe("PATCH /inspections/exterior-detail -- success test", () => {
+    it("should return correct response (200) when admin update inspection status", (done) => {
+      request(app)
+        .patch("/inspections/exterior-detail/1")
+        .set("access_token", access_token)
+        .send({ speedometer: true, klakson: true, steeringWheel: true })
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH /inspections/exterior-detail -- failed test", () => {
+    it("should return correct response (404) when there is no exterior inspection data", (done) => {
+      request(app)
+        .patch("/inspections/exterior-detail/100")
+        .set("access_token", access_token)
+        .send({ chassis: true, bumper: true, lights: true })
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
           done();
         })
         .catch((err) => {
