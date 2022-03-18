@@ -1,4 +1,16 @@
-const { Car, Image, Type, Dealer, Brand, sequelize } = require("../models");
+const {
+  Car,
+  Image,
+  Type,
+  Dealer,
+  Brand,
+  sequelize,
+  Inspection,
+  Interior,
+  Exterior,
+  RoadTest,
+  Kolong,
+} = require("../models");
 
 const getCars = async (req, res, next) => {
   try {
@@ -33,6 +45,7 @@ const getCars = async (req, res, next) => {
 };
 
 const addCar = async (req, res, next) => {
+  console.log(req.loginDealer, " dari add car");
   const t = await sequelize.transaction();
   try {
     const {
@@ -94,6 +107,41 @@ const addCar = async (req, res, next) => {
       returning: true,
       transaction: t,
     });
+
+    const inspection = await Inspection.create(
+      {
+        CarId: car.id,
+      },
+      { returning: true, transaction: t }
+    );
+
+    const interior = await Interior.create(
+      {
+        InspectionId: inspection.id,
+      },
+      { returning: true, transaction: t }
+    );
+
+    const exterior = await Exterior.create(
+      {
+        InspectionId: inspection.id,
+      },
+      { returning: true, transaction: t }
+    );
+
+    const roadTest = await RoadTest.create(
+      {
+        InspectionId: inspection.id,
+      },
+      { returning: true, transaction: t }
+    );
+
+    const kolong = await Kolong.create(
+      {
+        InspectionId: inspection.id,
+      },
+      { returning: true, transaction: t }
+    );
 
     await t.commit();
 
@@ -250,4 +298,35 @@ const editcar = async (req, res, next) => {
   }
 };
 
-module.exports = { addCar, getCars, getCar, deleteCar, editcar };
+const changeInspectionStatus = async (req, res, next) => {
+  console.log(req.loginAdmin, "dari inspeksi");
+  try {
+    const { passedInspection } = req.body;
+    const { id } = req.params;
+
+    const foundCar = await Car.findByPk(id);
+
+    if (!foundCar) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Product not found",
+      };
+    }
+
+    await Car.update({ passedInspection }, { where: { id: foundCar.id } });
+
+    res.status(200).json({ message: "Car inspection status updated" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  addCar,
+  getCars,
+  getCar,
+  deleteCar,
+  editcar,
+  changeInspectionStatus,
+};

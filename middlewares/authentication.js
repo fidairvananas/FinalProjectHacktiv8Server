@@ -7,9 +7,7 @@ const authentication = async (req, res, next) => {
 
     const payload = generatePayload(access_token);
 
-    const dealer = await Dealer.findByPk(payload.id);
-
-    if (!dealer) {
+    if (!payload.storeName) {
       throw {
         code: 401,
         name: "INVALID_TOKEN",
@@ -17,11 +15,19 @@ const authentication = async (req, res, next) => {
       };
     }
 
+    const dealer = await Dealer.findOne({
+      where: {
+        storeName: payload.storeName,
+      },
+    });
+
     req.loginDealer = {
       id: dealer.id,
-      role: dealer.role,
+      name: dealer.name,
       email: dealer.email,
       storeName: dealer.storeName,
+      storeAddress: dealer.storeAddress,
+      phoneNumber: dealer.phoneNumber,
     };
 
     next();

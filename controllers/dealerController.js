@@ -70,6 +70,8 @@ const login = async (req, res, next) => {
           name: foundDealer.name,
           email: foundDealer.email,
           storeName: foundDealer.storeName,
+          phoneNumber: foundDealer.phoneNumber,
+          storeAddress: foundDealer.storeAddress,
         };
 
         res.status(200).json({
