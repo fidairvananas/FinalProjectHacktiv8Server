@@ -45,7 +45,6 @@ const getCars = async (req, res, next) => {
 };
 
 const addCar = async (req, res, next) => {
-  console.log(req.loginDealer, " dari add car");
   const t = await sequelize.transaction();
   try {
     const {
@@ -237,7 +236,7 @@ const editcar = async (req, res, next) => {
       throw {
         code: 404,
         name: "NOT_FOUND",
-        message: "Product not found",
+        message: "Car not found",
       };
     }
 
@@ -299,18 +298,18 @@ const editcar = async (req, res, next) => {
 };
 
 const changeInspectionStatus = async (req, res, next) => {
-  console.log(req.loginAdmin, "dari inspeksi");
   try {
     const { passedInspection } = req.body;
     const { id } = req.params;
 
+    console.log(passedInspection);
     const foundCar = await Car.findByPk(id);
 
     if (!foundCar) {
       throw {
         code: 404,
         name: "NOT_FOUND",
-        message: "Product not found",
+        message: "Car not found",
       };
     }
 

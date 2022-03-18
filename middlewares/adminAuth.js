@@ -7,7 +7,7 @@ const adminAuthentication = async (req, res, next) => {
 
     const payload = generatePayload(access_token);
 
-    if (!payload.role) {
+    if (!payload.email) {
       throw {
         code: 401,
         name: "INVALID_TOKEN",
@@ -15,8 +15,15 @@ const adminAuthentication = async (req, res, next) => {
       };
     }
 
-    const admin = await Admin.findOne({ where: { role: payload.role } });
-    console.log(admin);
+    const admin = await Admin.findOne({ where: { email: payload.email } });
+
+    if (!admin) {
+      throw {
+        code: 401,
+        name: "INVALID_TOKEN",
+        message: "Invalid token or user",
+      };
+    }
 
     req.loginAdmin = {
       id: admin.id,

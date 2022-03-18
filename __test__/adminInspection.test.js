@@ -27,8 +27,22 @@ beforeAll((done) => {
     createdAt: new Date(),
     updatedAt: new Date(),
   };
+  let inspection = {
+    id: 2,
+    mainInspection: false,
+    exteriorInspection: false,
+    interiorInspection: false,
+    roadTest: false,
+    kolongTest: false,
+    CarId: 2,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
   queryInterface
     .bulkInsert("Cars", [data], {})
+    .then((res) => {
+      return queryInterface.bulkInsert("Inspections", [inspection], {});
+    })
     .then((res) => {
       done();
     })
@@ -40,6 +54,9 @@ beforeAll((done) => {
 afterAll((done) => {
   queryInterface
     .bulkDelete("Cars", null, {})
+    .then((res) => {
+      return queryInterface.bulkDelete("Inspections", null, {});
+    })
     .then((res) => {
       done();
     })
@@ -293,6 +310,178 @@ describe("Inspection test", () => {
         .then((res) => {
           expect(res.status).toBe(401);
           expect(res.body).toHaveProperty("message", "Invalid token or user");
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH /inspections - success test", () => {
+    test("should return correct response (200) when admin is authorized to change main inspection status", (done) => {
+      request(app)
+        .patch("/inspections/main/2")
+        .send({ mainInspection: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (200) when admin is authorized to change exterior inspection status", (done) => {
+      request(app)
+        .patch("/inspections/exterior/2")
+        .send({ exteriorInspection: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (200) when admin is authorized to change interior inspection status", (done) => {
+      request(app)
+        .patch("/inspections/interior/2")
+        .send({ interiorInspection: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (200) when admin is authorized to change roadTest inspection status", (done) => {
+      request(app)
+        .patch("/inspections/roadTest/2")
+        .send({ roadTest: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (200) when admin is authorized to change kolong inspection status", (done) => {
+      request(app)
+        .patch("/inspections/kolong/2")
+        .send({ kolongTest: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH /inspections - failed test", () => {
+    test("should return correct response (401) when other user than admin trying to change inspection status", (done) => {
+      request(app)
+        .patch("/inspections/main/2")
+        .send({ mainInspection: true })
+        .set(
+          "access_token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJtd29ya2VyMjZAZ21haWwuY29tIiwic3RvcmVOYW1lIjoiSnViZWwgQ2xhc3NpYyIsInBob25lTnVtYmVyIjoiMDgxMzExMTA3OTU0Iiwic3RvcmVBZGRyZXNzIjoiTWVkYW4gaGVsdmV0aWEiLCJpYXQiOjE2NDc1NzA1ODl9.kouAbBpeUN1dIvjsNtfKbv482h7zsF-qsfYT2tLbPO8"
+        )
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toHaveProperty("message", "Invalid token or user");
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (404) when inspection is not found", (done) => {
+      request(app)
+        .patch("/inspections/main/100")
+        .send({ mainInspection: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (404) when inspection is not found", (done) => {
+      request(app)
+        .patch("/inspections/interior/100")
+        .send({ interiorInspection: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (404) when inspection is not found", (done) => {
+      request(app)
+        .patch("/inspections/exterior/100")
+        .send({ exteriorInspection: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (404) when inspection is not found", (done) => {
+      request(app)
+        .patch("/inspections/roadtest/100")
+        .send({ roadTest: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toHaveProperty("message", expect.any(String));
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    test("should return correct response (404) when inspection is not found", (done) => {
+      request(app)
+        .patch("/inspections/kolong/100")
+        .send({ kolongTest: true })
+        .set("access_token", access_token)
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toHaveProperty("message", expect.any(String));
           done();
         })
         .catch((err) => {
