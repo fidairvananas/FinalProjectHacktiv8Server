@@ -138,6 +138,18 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Type is required",
+          },
+          notEmpty: {
+            msg: "Type is required",
+          },
+        },
+      },
     },
     {
       sequelize,

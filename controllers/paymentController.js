@@ -31,23 +31,36 @@ const payment = async (req, res, next) => {
       include: [
         {
           model: Type,
+          include: {
+            model: Brand
+          }
         },
         {
           model: Dealer,
-        },
-        {
-          model: Brand,
-        },
+        }
       ],
     });
 
-    if (!car) {
+    if (!car || car.status == 'sold') {
       throw {
         code: 404,
         name: "NOT_FOUND",
         message: "Car not found.",
       };
     }
+
+    const history = await BoughtHistory.findAll()
+    let orderId;
+    
+    if (!history.length) {
+      orderId = 'JMB-' + 1 + '-' + new Date().getTime()
+    } else {
+      let num = history[history.length - 1].id + 1
+      orderId = 'JMB-' + num + '-' + new Date().getTime()
+    }
+
+    
+    const date = new Date().toISOString().split('T').join(' ').split('.')[0] + ' +0700'
 
     const payload = {
       transaction_details: {
@@ -60,7 +73,7 @@ const payment = async (req, res, next) => {
           price: car.price,
           quantity: quantity,
           name: car.name,
-          brand: car.Brand.name,
+          brand: car.Type.Brand.name,
           category: car.Type.modelName,
           merchant_name: car.Dealer.name,
         },
@@ -85,7 +98,6 @@ const payment = async (req, res, next) => {
         "bri_epay",
         "echannel",
         "mandiri_ecash",
-        "permata_va",
         "bca_va",
         "bni_va",
         "other_va",
@@ -115,7 +127,7 @@ const payment = async (req, res, next) => {
         start_time: new Date(),
       },
       bca_va: {
-        va_number: "125" + phoneNumber,
+        va_number: "125" + buyer.phoneNumber,
         sub_company_code: "00000",
         free_text: {
           inquiry: [
@@ -133,25 +145,22 @@ const payment = async (req, res, next) => {
         },
       },
       bni_va: {
-        va_number: "145" + phoneNumber,
-      },
-      permata_va: {
-        va_number: "165" + phoneNumber,
+        va_number: "145" + buyer.phoneNumber,
       },
       callbacks: {
         finish: "https://demo.midtrans.com",
       },
       expiry: {
-        start_time: new Date(),
+        start_time: '2022-04-17 19:31:01 +0700',
         unit: "minutes",
         duration: 1,
       },
       custom_field1: notes ? notes : "",
     };
 
-    const { data } = await midtrans.post("snap/v1/transactions/", payload);
+    const {data} = await midtrans.post("snap/v1/transactions/", payload);
 
-    if (!data) {
+    if (!data.token) {
       throw {
         code: 403,
         name: "FORBIDDEN",
@@ -174,16 +183,16 @@ const payment = async (req, res, next) => {
     await BoughtHistory.create({
       carName: car.name,
       description: car.description,
-      broughtDate: new Date(),
+      boughtDate: new Date(),
       paidOff: true,
       price: car.price,
       BuyerId: buyerId,
       orderId,
       installment: installment ? true : false,
-      currentInstallment: 1
+      currentInstallment: installment ? 1 : 0
     })
 
-    res.status(200).json({ message: "Transastion has been succeed." });
+    res.status(200).json({ message: "Transastion has been succeed.", paymentUrl: data.redirect_url });
     await t.commit();
   } catch (err) {
     await t.rollback();

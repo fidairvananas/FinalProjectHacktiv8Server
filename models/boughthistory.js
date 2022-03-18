@@ -75,6 +75,32 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      orderId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Buyer id is required",
+          },
+          notEmpty: {
+            msg: "Buyer id is required",
+          },
+        },
+      },
+      installment: DataTypes.BOOLEAN,
+      currentInstallment: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+        validate: {
+          notNull: {
+            msg: "Buyer id is required",
+          },
+          notEmpty: {
+            msg: "Buyer id is required",
+          },
+        },
+      },
     },
     {
       sequelize,
