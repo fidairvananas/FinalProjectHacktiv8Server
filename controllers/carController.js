@@ -78,7 +78,7 @@ const addCar = async (req, res, next) => {
       { returning: true, transaction: t }
     );
 
-    if (!image) {
+    if (!image.length) {
       throw {
         code: 400,
         name: "BAD_REQUEST",
@@ -249,7 +249,7 @@ const editcar = async (req, res, next) => {
       { where: { id: foundCar.id }, returning: true, transaction: t }
     );
 
-    if (!image) {
+    if (!image.length) {
       throw {
         code: 400,
         name: "BAD_REQUEST",

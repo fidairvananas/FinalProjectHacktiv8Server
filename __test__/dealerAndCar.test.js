@@ -639,7 +639,7 @@ describe("Car routes", () => {
         });
     });
 
-    test("should return correct response (400) when image field is missing", (done) => {
+    test("should return correct response (400) when there is no image", (done) => {
       request(app)
         .post("/cars")
         .send({
@@ -652,6 +652,7 @@ describe("Car routes", () => {
           color: "black",
           yearMade: "1989-04-23T18:25:43.511Z",
           TypeId: 5,
+          image: [],
         })
         .set("access_token", access_token)
         .then((res) => {
@@ -868,7 +869,7 @@ describe("Car routes", () => {
         });
     });
 
-    test("should return correct response (400) when image field is missing", (done) => {
+    test("should return correct response (400) when there is no image", (done) => {
       request(app)
         .put("/cars/1")
         .send({
@@ -881,6 +882,7 @@ describe("Car routes", () => {
           color: "black",
           yearMade: "1989-04-23T18:25:43.511Z",
           TypeId: 5,
+          image: [],
         })
         .set("access_token", access_token)
         .then((res) => {

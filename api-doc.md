@@ -4,52 +4,52 @@
 
 List of available endpoints:
 
-- `POST /products`
-- `GET /products`
-- `GET /products/:id`
-- `PUT /products/:id`
-- `DELETE /products/:id`
-- `POST /register`
-- `POST /login`
-- `POST /login-google`
-- `GET /products/histories`
-- `POST /pub/register`
-- `POST /pub/login`
-- `POST /pub/login-google`
-- `GET /pub/products`
-- `GET /pub/histories`
-- `PATCH /products/:id`
-- `GET /wishlist`
-- `POST /wishlist/:productId`
-- `DELETE /wishlist/:id`
+- `POST /admins/register`
+- `POST /admins/login`
+- `POST /dealers/register`
+- `POST /dealers/login`
+- `GET /cars`
+- `POST /cars`
+- `GET /cars/:id`
+- `DELETE /cars/:id`
+- `PUT /cars/:id`
+- `PATCH /cars/:id`
+- `GET /inspections`
+- `GET /inspections/:id`
+- `PATCH /inspections/main/:id`
+- `PATCH /inspections/exterior/:id`
+- `PATCH /inspections/interior/:id`
+- `PATCH /inspections/roadtest/:id`
+- `PATCH /inspections/kolong/:id`
+- `PATCH /inspections/exterior-detail/:id`
+- `GET /inspections/exterior-detail/:id`
+- `PATCH /inspections/interior-detail/:id`
+- `GET /inspections/interior-detail/:id`
+- `PATCH /inspections/kolong-detail/:id`
+- `GET /inspections/kolong-detail/:id`
+- `PATCH /inspections/roadtest-detail/:id`
+- `GET /inspections/roadtest-detail/:id`
+- `GET /brands`
+- `GET /types`
 
 &nbsp;
 
-## 1. POST /products
+## 1. POST /admins/register
 
 Description:
 
-- Create a product
+- Register an Admin
 
 Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
 
 - body:
 
 ```json
 {
-  "name": "string (required)",
-  "description": "string (required)",
-  "price": "integer (required)",
-  "imgUrl": "string",
-  "categoryId": "integer"
+  "name": "Admin",
+  "email": "admin@mail.com",
+  "password": "12345",
+  "phoneNumber": "081327786541"
 }
 ```
 
@@ -57,15 +57,7 @@ _Response (201 - Created)_
 
 ```json
 {
-  "id": 3,
-  "name": "Meja Kayu",
-  "description": "Meja Kayu jati",
-  "price": 100000,
-  "imgUrl": "https://3.bp.blogspot.com/-LQZH414qkzs/VlfUu7rtSZI/AAAAAAAAGyE/4cXh4fcvYxM/s1600/34.jpg",
-  "categoryId": 1,
-  "authorId": 2,
-  "updatedAt": "2022-02-01T12:45:40.490Z",
-  "createdAt": "2022-02-01T12:45:40.490Z"
+  "message": "Register for admin success"
 }
 ```
 
@@ -73,39 +65,148 @@ _Response (400 - Bad Request)_
 
 ```json
 {
-  "message": ["Name must be inputted"]
+    "message": "Email must be unique"
 }
 OR
 {
-  "message": ["Description must be inputted"]
+    "message": "Name is required"
 }
 OR
 {
-  "message": ["Price must be inputted"]
+    "message": "Email is required"
 }
 OR
 {
-  "message": ["Price must be at least Rp 10000"]
+    "message": "Password is required"
+}
+OR
+...
+```
+
+&nbsp;
+
+## 2. POST /admins/login
+
+Description:
+
+- Login as admin
+
+Request:
+
+- body:
+
+```json
+{
+  "email": "admin@mail.com",
+  "password": "12345"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Login as admin success",
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwicGhvbmVOdW1iZXIiOiIwODEzMTExMDc5NTQiLCJlbWFpbCI6ImFkbWluQG1haWwuY29tIiwiaWF0IjoxNjQ3NjcxNDM1fQ.tMsTzxoQDERPa8AM10iEJK7GRiu-7xmYTvQ8I4ef8iI"
+}
+```
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid email or password"
 }
 ```
 
 &nbsp;
 
-## 2. GET /products
+## 3. POST /dealers/register
 
 Description:
 
-- Get all products from database
+- Register as dealer
 
 Request:
 
-- headers:
+- body:
 
 ```json
 {
-  "access_token": "string (required)"
+  "name": "Jubel",
+  "phoneNumber": "081234567843",
+  "email": "jubelsinaga13@gmail.com",
+  "password": "12345",
+  "storeName": "Jubel Classic",
+  "storeAddress": "Medan Helvetia"
 }
 ```
+
+_Response (201 - Created)_
+
+```json
+{
+  "id": 1,
+  "name": "Jubel",
+  "email": "jubelsinaga13@gmail.com"
+}
+```
+
+_Response (400 - Bad request)_
+
+```json
+{
+  "message": "Email must be unique"
+}
+OR
+{
+    "message": "Phone is required"
+}
+```
+
+&nbsp;
+
+## 4. POST /dealers/login
+
+Description:
+
+- Login as dealer
+
+Request:
+
+- body:
+
+```json
+{
+  "email": "jubelsinaga13@gmail.com",
+  "password": "12345"
+}
+```
+
+_Response (200- OK)_
+
+```json
+{
+  "message": "login Succesful",
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJqdWJlbHNpbmFnYTEzQGdtYWlsLmNvbSIsInN0b3JlTmFtZSI6Ikp1YmVsIENsYXNzaWMiLCJwaG9uZU51bWJlciI6IjA4MTMxMTEwNzk1NCIsInN0b3JlQWRkcmVzcyI6Ik1lZGFuIGhlbHZldGlhIiwiaWF0IjoxNjQ3NjcyMjMzfQ.MgiPHgV7pt7bFyf-PTro91pGQLOPBy3rOpJAe6WU8Bg"
+}
+```
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+&nbsp;
+
+## 5. GET /cars
+
+Description:
+
+- Get list of all cars
 
 _Response (200 - OK)_
 
@@ -113,25 +214,1267 @@ _Response (200 - OK)_
 [
   {
     "id": 1,
-    "name": "Sofa Tamu",
-    "description": "Sofa bagus untuk ruang tamu anda",
-    "price": 2000000,
-    "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/905/0990531_PE819028_S4.jpg",
-    "categoryId": 1,
-    "authorId": 1,
-    "createdAt": "2022-02-01T12:38:44.422Z",
-    "updatedAt": "2022-02-01T12:38:44.422Z"
+    "name": "Ford Model T Touring- 1918",
+    "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
+    "fuel": "Gasoline",
+    "seats": 2,
+    "mileage": 70000,
+    "price": 100000000,
+    "color": "black",
+    "yearMade": "1918-04-23T00:00:00.000Z",
+    "passedInspection": false,
+    "DealerId": 1,
+    "TypeId": 1,
+    "createdAt": "2022-03-19T07:49:29.675Z",
+    "updatedAt": "2022-03-19T07:49:29.675Z",
+    "Type": {
+      "modelName": "Model T",
+      "Brand": {
+        "name": "Ford"
+      }
+    },
+    "Dealer": {
+      "id": 1,
+      "name": "Jubel",
+      "email": "jubelsinaga13@gmail.com",
+      "phoneNumber": "081311107954",
+      "storeName": "Jubel Classic",
+      "storeAddress": "Medan helvetia"
+    },
+    "Images": [
+      {
+        "id": 1,
+        "image": "https://www.lanemotormuseum.org/media/zoo/images/ford_modelT_1918web1a_9071f8b80d69dd143f5a7e9057f0a772.jpg",
+        "CarId": 1,
+        "createdAt": "2022-03-19T07:49:29.684Z",
+        "updatedAt": "2022-03-19T07:49:29.684Z"
+      },
+      {
+        "id": 2,
+        "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/1918_Ford_Model_T_Touring_2.9.jpg",
+        "CarId": 1,
+        "createdAt": "2022-03-19T07:49:29.684Z",
+        "updatedAt": "2022-03-19T07:49:29.684Z"
+      }
+    ]
   },
   {
-    "id": 2,
-    "name": "Meja makan",
-    "description": "Meja makan berkualitas untuk ruang makan anda",
-    "price": 1500000,
-    "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/452/0445221_PE595674_S4.jpg",
-    "categoryId": 9,
-    "authorId": 1,
-    "createdAt": "2022-02-01T12:38:44.422Z",
-    "updatedAt": "2022-02-01T12:38:44.422Z"
+    "id": 5,
+    "name": "Honda Civic 1988",
+    "description": "The fourth generation Honda Civic is an automobile produced by Honda from 1987 until 1991 with the wagon continuing in production in some markets until 1996. The suspension had a new double wishbone suspension in the front and an independent suspension in the rear, the wheelbase was increased to 98.4 inches (250 cm), and the body was redesigned with a lower hood line and more glass, giving less drag. The redesigned Civic was introduced in 1987 for the 1988 model year. The fourth generation Civic would be available in three variants; 3-door hatchback, 4-door sedan and 5-door wagon with various trim levels offered in each variant.",
+    "fuel": "Gasoline",
+    "seats": 4,
+    "mileage": 150000,
+    "price": 75000000,
+    "color": "silver",
+    "yearMade": "1988-04-23T00:00:00.000Z",
+    "passedInspection": false,
+    "DealerId": 1,
+    "TypeId": 6,
+    "createdAt": "2022-03-19T07:58:45.279Z",
+    "updatedAt": "2022-03-19T07:58:45.279Z",
+    "Type": {
+      "modelName": "Civic",
+      "Brand": {
+        "name": "Honda"
+      }
+    },
+    "Dealer": {
+      "id": 1,
+      "name": "Jubel",
+      "email": "jubelsinaga13@gmail.com",
+      "phoneNumber": "081311107954",
+      "storeName": "Jubel Classic",
+      "storeAddress": "Medan helvetia"
+    },
+    "Images": [
+      {
+        "id": 3,
+        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9f/1989_Honda_Civic_GL_sedan_%28front%29.jpg",
+        "CarId": 5,
+        "createdAt": "2022-03-19T07:58:45.284Z",
+        "updatedAt": "2022-03-19T07:58:45.284Z"
+      }
+    ]
+  }
+  ...
+]
+```
+
+&nbsp;
+
+## 6. POST /cars
+
+Description:
+
+- Post cars as dealer
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "name": "Ford Model T Touring- 1918",
+  "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
+  "fuel": "Gasoline",
+  "seats": 2,
+  "mileage": 70000,
+  "price": 100000000,
+  "color": "black",
+  "yearMade": "1918-04-23",
+  "TypeId": 1,
+  "image": [
+    "https://www.lanemotormuseum.org/media/zoo/images/ford_modelT_1918web1a_9071f8b80d69dd143f5a7e9057f0a772.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a3/1918_Ford_Model_T_Touring_2.9.jpg"
+  ]
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Car created"
+}
+```
+
+_Response (400 - Bad Request)_
+
+```json
+{
+    "message": "Image is required"
+}
+OR
+{
+    "message": "Car name is required"
+}
+OR
+...
+
+```
+
+&nbsp;
+
+## 7. GET /cars/:id
+
+Description:
+
+- Get a car by id
+
+Request:
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": 1,
+  "name": "Ford Model T Touring- 1918",
+  "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
+  "fuel": "Gasoline",
+  "seats": 2,
+  "mileage": 70000,
+  "price": 100000000,
+  "color": "black",
+  "yearMade": "1918-04-23T00:00:00.000Z",
+  "passedInspection": false,
+  "DealerId": 1,
+  "TypeId": 1,
+  "createdAt": "2022-03-19T07:49:29.675Z",
+  "updatedAt": "2022-03-19T07:49:29.675Z",
+  "Type": {
+    "id": 1,
+    "modelName": "Model T",
+    "BrandId": 5,
+    "createdAt": "2022-03-19T06:20:28.481Z",
+    "updatedAt": "2022-03-19T06:20:28.481Z",
+    "Brand": {
+      "id": 5,
+      "name": "Ford",
+      "createdAt": "2022-03-19T06:20:28.473Z",
+      "updatedAt": "2022-03-19T06:20:28.473Z"
+    }
+  },
+  "Dealer": {
+    "id": 1,
+    "name": "Jubel",
+    "email": "jubelsinaga13@gmail.com",
+    "phoneNumber": "081311107954",
+    "storeName": "Jubel Classic",
+    "storeAddress": "Medan helvetia"
+  },
+  "Images": [
+    {
+      "id": 1,
+      "image": "https://www.lanemotormuseum.org/media/zoo/images/ford_modelT_1918web1a_9071f8b80d69dd143f5a7e9057f0a772.jpg",
+      "CarId": 1,
+      "createdAt": "2022-03-19T07:49:29.684Z",
+      "updatedAt": "2022-03-19T07:49:29.684Z"
+    },
+    {
+      "id": 2,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/1918_Ford_Model_T_Touring_2.9.jpg",
+      "CarId": 1,
+      "createdAt": "2022-03-19T07:49:29.684Z",
+      "updatedAt": "2022-03-19T07:49:29.684Z"
+    }
+  ]
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Car not found"
+}
+```
+
+&nbsp;
+
+## 8. DELETE /cars/:id
+
+Description:
+
+- Delete car by id from database
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Car Deleted succesfully"
+}
+```
+
+_Response (400 - Bad Request)_
+
+```json
+{
+  "message": "Car not found"
+}
+```
+
+&nbsp;
+
+## 9. PUT /cars/:id
+
+Description:
+
+- Edit car by id
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+-body:
+
+```json
+{
+  "name": "Honda Civic 1988 edited",
+  "description": "The fourth generation Honda Civic is an automobile produced by Honda from 1987 until 1991 with the wagon continuing in production in some markets until 1996. The suspension had a new double wishbone suspension in the front and an independent suspension in the rear, the wheelbase was increased to 98.4 inches (250 cm), and the body was redesigned with a lower hood line and more glass, giving less drag. The redesigned Civic was introduced in 1987 for the 1988 model year. The fourth generation Civic would be available in three variants; 3-door hatchback, 4-door sedan and 5-door wagon with various trim levels offered in each variant.",
+  "fuel": "Gasoline",
+  "seats": 4,
+  "mileage": 150000,
+  "price": 75000000,
+  "color": "silver",
+  "yearMade": "1988-04-23",
+  "TypeId": 6,
+  "image": [
+    "https://upload.wikimedia.org/wikipedia/commons/9/9f/1989_Honda_Civic_GL_sedan_%28front%29.jpg"
+  ]
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Car updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Car not found"
+}
+```
+
+&nbsp;
+
+## 10. PATCH /cars/:id
+
+Description:
+
+- Update inspection status by admin
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "passedInspection": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Car inspection status updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Car not found"
+}
+```
+
+&nbsp;
+
+## 11. GET /inspections
+
+Description:
+
+- Get all inspections
+
+_Response (200 - OK)_
+
+```json
+[
+  {
+    "id": 1,
+    "mainInspection": false,
+    "exteriorInspection": false,
+    "interiorInspection": false,
+    "roadTest": false,
+    "kolongTest": false,
+    "CarId": 1,
+    "createdAt": "2022-03-19T07:49:29.689Z",
+    "updatedAt": "2022-03-19T07:49:29.689Z",
+    "Exterior": {
+      "id": 1,
+      "chassis": false,
+      "bumper": false,
+      "lights": false,
+      "roof": false,
+      "spion": false,
+      "windShield": false,
+      "kacaSamping": false,
+      "kacaBelakang": false,
+      "tire": false,
+      "InspectionId": 1,
+      "createdAt": "2022-03-19T07:49:29.697Z",
+      "updatedAt": "2022-03-19T07:49:29.697Z"
+    },
+    "Interior": {
+      "id": 1,
+      "speedometer": false,
+      "klakson": false,
+      "steeringWheel": false,
+      "rearViewMirror": false,
+      "dashboard": false,
+      "seats": false,
+      "gasPedal": false,
+      "brakePedal": false,
+      "InspectionId": 1,
+      "createdAt": "2022-03-19T07:49:29.693Z",
+      "updatedAt": "2022-03-19T07:49:29.693Z"
+    },
+    "RoadTest": {
+      "id": 1,
+      "engineStarting": false,
+      "engineIdling": false,
+      "steeringSystem": false,
+      "acceleration": false,
+      "engineSound": false,
+      "brake": false,
+      "InspectionId": 1,
+      "createdAt": "2022-03-19T07:49:29.700Z",
+      "updatedAt": "2022-03-19T07:49:29.700Z"
+    },
+    "Kolong": {
+      "id": 1,
+      "oliMesin": false,
+      "transmission": false,
+      "minyakRem": false,
+      "radiator": false,
+      "aki": false,
+      "bottomCover": false,
+      "knalpot": false,
+      "kestabilanBan": false,
+      "shockBreaker": false,
+      "masterBrake": false,
+      "InspectionId": 1,
+      "createdAt": "2022-03-19T07:49:29.702Z",
+      "updatedAt": "2022-03-19T07:49:29.702Z"
+    }
+  }
+  ...
+]
+```
+
+&nbsp;
+
+## 12. GET /inspections/:id
+
+Description
+
+- Get inspection by id
+
+Request:
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": 1,
+  "mainInspection": false,
+  "exteriorInspection": false,
+  "interiorInspection": false,
+  "roadTest": false,
+  "kolongTest": false,
+  "CarId": 1,
+  "createdAt": "2022-03-19T07:49:29.689Z",
+  "updatedAt": "2022-03-19T07:49:29.689Z",
+  "Exterior": {
+    "id": 1,
+    "chassis": false,
+    "bumper": false,
+    "lights": false,
+    "roof": false,
+    "spion": false,
+    "windShield": false,
+    "kacaSamping": false,
+    "kacaBelakang": false,
+    "tire": false,
+    "InspectionId": 1,
+    "createdAt": "2022-03-19T07:49:29.697Z",
+    "updatedAt": "2022-03-19T07:49:29.697Z"
+  },
+  "Interior": {
+    "id": 1,
+    "speedometer": false,
+    "klakson": false,
+    "steeringWheel": false,
+    "rearViewMirror": false,
+    "dashboard": false,
+    "seats": false,
+    "gasPedal": false,
+    "brakePedal": false,
+    "InspectionId": 1,
+    "createdAt": "2022-03-19T07:49:29.693Z",
+    "updatedAt": "2022-03-19T07:49:29.693Z"
+  },
+  "RoadTest": {
+    "id": 1,
+    "engineStarting": false,
+    "engineIdling": false,
+    "steeringSystem": false,
+    "acceleration": false,
+    "engineSound": false,
+    "brake": false,
+    "InspectionId": 1,
+    "createdAt": "2022-03-19T07:49:29.700Z",
+    "updatedAt": "2022-03-19T07:49:29.700Z"
+  },
+  "Kolong": {
+    "id": 1,
+    "oliMesin": false,
+    "transmission": false,
+    "minyakRem": false,
+    "radiator": false,
+    "aki": false,
+    "bottomCover": false,
+    "knalpot": false,
+    "kestabilanBan": false,
+    "shockBreaker": false,
+    "masterBrake": false,
+    "InspectionId": 1,
+    "createdAt": "2022-03-19T07:49:29.702Z",
+    "updatedAt": "2022-03-19T07:49:29.702Z"
+  }
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Inspection not found"
+}
+```
+
+&nbsp;
+
+## 13. PATCH /main/:id
+
+Description:
+
+- Change main inspection status on inspection table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "mainInspection": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Main inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Inspection not found"
+}
+```
+
+&nbsp;
+
+## 14. PATCH /exterior/:id
+
+Description:
+
+- Change exterior inspection status on inspection table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "exteriorInspection": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Exterior inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Inspection not found"
+}
+```
+
+&nbsp;
+
+## 15. PATCH /interior/:id
+
+Description:
+
+- Change interior inspection status on inspection table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "interiorInspection": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Interior inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Inspection not found"
+}
+```
+
+&nbsp;
+
+## 16. PATCH /roadtest/:id
+
+Description:
+
+- Change roadtest inspection status on inspection table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "roadTest": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Road test inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Inspection not found"
+}
+```
+
+&nbsp;
+
+## 17. PATCH /kolong/:id
+
+Description:
+
+- Change kolong inspection status on inspection table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "kolongTest": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Kolong inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Inspection not found"
+}
+```
+
+&nbsp;
+
+## 18. PATCH /exterior-detail/:id
+
+Description:
+
+- Change car part inspection on exterior table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "chassis": "boolean",
+  "bumper": "boolean",
+  "lights": "boolean",
+  "roof": "boolean",
+  "spion": "boolean",
+  "windShield": "boolean",
+  "kacaSamping": "boolean",
+  "kacaBelakang": "boolean",
+  "tire": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "exterior Inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Exterior inspection not found"
+}
+```
+
+&nbsp;
+
+## 19. GET /exterior-detail/:id
+
+Description:
+
+- Get exterior detail inspection data by id
+
+Request:
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": 1,
+  "chassis": false,
+  "bumper": true,
+  "lights": true,
+  "roof": true,
+  "spion": true,
+  "windShield": true,
+  "kacaSamping": true,
+  "kacaBelakang": true,
+  "tire": true,
+  "InspectionId": 1,
+  "createdAt": "2022-03-19T07:49:29.697Z",
+  "updatedAt": "2022-03-19T09:42:28.184Z"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Exterior inspection not found"
+}
+```
+
+&nbsp;
+
+## 20. PATCH /interior-detail/:id
+
+Description:
+
+- Change car part inspection on interior table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "speedometer": "boolean",
+  "klakson": "boolean",
+  "steeringWheel": "boolean",
+  "rearViewMirror": "boolean",
+  "dashboard": "boolean",
+  "seats": "boolean",
+  "gasPedal": "boolean",
+  "breakPedal": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Interior Inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Interior inspection not found"
+}
+```
+
+&nbsp;
+
+## 21. GET /interior-detail/:id
+
+Description:
+
+- Get interior detail inspection data by id
+
+Request:
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": 1,
+  "speedometer": false,
+  "klakson": false,
+  "steeringWheel": true,
+  "rearViewMirror": true,
+  "dashboard": true,
+  "seats": true,
+  "gasPedal": true,
+  "brakePedal": true,
+  "InspectionId": 1,
+  "createdAt": "2022-03-19T07:49:29.693Z",
+  "updatedAt": "2022-03-19T09:47:47.860Z"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Interior inspection not found"
+}
+```
+
+&nbsp;
+
+## 22. PATCH /kolong-detail/:id
+
+Description:
+
+- Change car part inspection on kolong table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "oliMesin": "boolean",
+  "transmission": "boolean",
+  "minyakRem": "boolean",
+  "radiator": "boolean",
+  "aki": "boolean",
+  "bottomCover": "boolean",
+  "knalpot": "boolean",
+  "kestabilanBan": "boolean",
+  "shockBreaker": "boolean",
+  "masterBrake": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Kolong inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Kolong inspection not found"
+}
+```
+
+&nbsp;
+
+## 23. GET /kolong-detail/:id
+
+Description:
+
+- Get kolong detail inspection data by id
+
+Request:
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": 3,
+  "oliMesin": false,
+  "transmission": true,
+  "minyakRem": true,
+  "radiator": true,
+  "aki": true,
+  "bottomCover": true,
+  "knalpot": true,
+  "kestabilanBan": true,
+  "shockBreaker": true,
+  "masterBrake": true,
+  "InspectionId": 3,
+  "createdAt": "2022-03-19T07:58:45.311Z",
+  "updatedAt": "2022-03-19T09:54:34.007Z"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Kolong inspection not found"
+}
+```
+
+&nbsp;
+
+## 24. PATCH /roadtest-detail/:id
+
+Description:
+
+- Change car part inspection on roadtest table
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string (required)"
+}
+```
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+- body:
+
+```json
+{
+  "engineStarting": "boolean",
+  "engineIdling": "boolean",
+  "steeringSystem": "boolean",
+  "acceleration": "boolean",
+  "engineSound": "boolean",
+  "brake": "boolean"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "Road test inspection updated"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Road inspection not found"
+}
+```
+
+&nbsp;
+
+## 25. GET /roadtest-detail/:id
+
+Description:
+
+- Get roadtest detail inspection data by id
+
+Request:
+
+- params:
+
+```json
+{
+  "id": "integer (required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": 3,
+  "engineStarting": true,
+  "engineIdling": true,
+  "steeringSystem": true,
+  "acceleration": true,
+  "engineSound": true,
+  "brake": true,
+  "InspectionId": 3,
+  "createdAt": "2022-03-19T07:58:45.306Z",
+  "updatedAt": "2022-03-19T09:59:52.564Z"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Road inspection not found"
+}
+```
+
+&nbsp;
+
+## 26. GET /brands
+
+Description:
+
+- Get all list of brands with its model/type
+
+_Response (200 - OK)_
+
+```json
+[
+  {
+    "id": 5,
+    "name": "Ford",
+    "createdAt": "2022-03-19T06:20:28.473Z",
+    "updatedAt": "2022-03-19T06:20:28.473Z",
+    "Types": [
+      {
+        "id": 1,
+        "modelName": "Model T",
+        "BrandId": 5,
+        "createdAt": "2022-03-19T06:20:28.481Z",
+        "updatedAt": "2022-03-19T06:20:28.481Z"
+      },
+      {
+        "id": 2,
+        "modelName": "Mustang",
+        "BrandId": 5,
+        "createdAt": "2022-03-19T06:20:28.481Z",
+        "updatedAt": "2022-03-19T06:20:28.481Z"
+      },
+      ...
   },
   ...
 ]
@@ -139,775 +1482,90 @@ _Response (200 - OK)_
 
 &nbsp;
 
-## 3. GET /products/:id
+## 28. GET /types
 
 Description:
 
-- Get a product by id
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "id": 1,
-  "name": "Sofa Tamu",
-  "description": "Sofa bagus untuk ruang tamu anda",
-  "price": 2000000,
-  "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/905/0990531_PE819028_S4.jpg",
-  "categoryId": 1,
-  "authorId": 1,
-  "createdAt": "2022-02-01T12:38:44.422Z",
-  "updatedAt": "2022-02-01T12:38:44.422Z"
-}
-```
-
-_Response (404 - Not Found)_
-
-```json
-{
-  "message": "Item not found"
-}
-```
-
-&nbsp;
-
-## 4. PUT /products/:id
-
-Description:
-
-- Update a product by id
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-- body:
-
-```json
-{
-  "name": "string (required)",
-  "description": "string (required)",
-  "price": "integer (required)",
-  "imgUrl": "string",
-  "categoryId": "integer"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "id": 3,
-  "name": "Meja kayu baru",
-  "description": "Meja kayu Baru untuk rumah anda",
-  "price": 200000,
-  "imgUrl": "https://3.bp.blogspot.com/-LQZH414qkzs/VlfUu7rtSZI/AAAAAAAAGyE/4cXh4fcvYxM/s1600/34.jpg",
-  "categoryId": 1,
-  "authorId": 2,
-  "createdAt": "2022-02-01T12:45:40.490Z",
-  "updatedAt": "2022-02-01T13:10:45.716Z"
-}
-```
-
-_Response (404 - Not Found)_
-
-```json
-{
-  "message": "Item not found"
-}
-```
-
-_Response (400 - Bad Request)_
-
-```json
-{
-  "message": ["Name must be inputted"]
-}
-OR
-{
-  "message": ["Description must be inputted"]
-}
-OR
-{
-  "message": ["Price must be inputted"]
-}
-OR
-{
-  "message": ["Price must be at least Rp 10000"]
-}
-```
-
-&nbsp;
-
-## 5. DELETE /products/:id
-
-Description:
-
-- Delete product by id
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Meja kayu baru deleted successfully"
-}
-```
-
-_Response (404 - Not Found)_
-
-```json
-{
-  "message": "Item not found"
-}
-```
-
-&nbsp;
-
-## 6. POST /register
-
-Request:
-
-- body:
-
-```json
-{
-  "email": "string (required)",
-  "password": "string (required)"
-}
-```
-
-_Response (201 - Created)_
-
-```json
-{
-  "id": 3,
-  "email": "adminBaru@gmail.com"
-}
-```
-
-_Response (400 - Bad Request)_
-
-```json
-{
-  "message": ["Email must be inputted"]
-}
-OR
-{
-  "message": ["Must be an email format"]
-}
-OR
-{
-  "message": ["Password must be inputted"]
-}
-OR
-{
-  "message": ["Password minimum 5 characters"]
-}
-OR
-{
-  "message": ["email must be unique"]
-}
-```
-
-&nbsp;
-
-## 7. POST /login
-
-Request:
-
-- body:
-
-```json
-{
-  "email": "string (required)",
-  "password": "string (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Login Succesful",
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNjQzODE1NTk4LCJleHAiOjE2NDM4MTkxOTh9.PkvqMZrcNXBMHHag9eBvC_AxbJ3onwvTZGbsVqvgLmA",
-  "role": "Admin",
-  "authorId": 21,
-  "email": "jack@gmail.com"
-}
-```
-
-_Response (401 - Unauthorized)_
-
-```json
-{
-  "message": "Invalid email or password"
-}
-```
-
-&nbsp;
-
-## 8. POST /login-google
-
-Request:
-
-- body:
-
-```json
-{
-  "token": "string (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Login Succesful",
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImVtYWlsIjoibXdvcmtlcjEzMkBnbWFpbC5jb20iLCJyb2xlIjoiU3RhZmYiLCJpYXQiOjE2NDM4MTU3NTcsImV4cCI6MTY0MzgxOTM1N30.t6yzKo7ldevQFvWLuEr9rgfBMH-vhzLRECtGc9HRK20",
-  "role": "Staff",
-  "authorId": 12,
-  "email": "jubelsinaga13@gmail.com"
-}
-```
-
-&nbsp;
-
-## 9. GET /products/histories
-
-Request:
-
-- body:
-
-```json
-{
-  "token": "string (required)"
-}
-```
+- Get all list of types/car model with car data and brand
 
 _Response (200 - OK)_
 
 ```json
 [
     {
-        "id": 8,
-        "entityId": 1,
-        "title": "Sofa Tamu",
-        "description": "Entity with id 1 status hase been updated from active into active",
-        "updatedBy": "jack@gmail.com",
-        "createdAt": "2022-02-07T15:54:56.538Z",
-        "updatedAt": "2022-02-07T15:54:56.538Z"
-    },
-    {
-        "id": 9,
-        "entityId": 4,
-        "title": "james",
-        "description": "New product with id 4 created",
-        "updatedBy": "jack@gmail.com",
-        "createdAt": "2022-02-07T15:56:32.280Z",
-        "updatedAt": "2022-02-07T15:56:32.280Z"
+        "id": 1,
+        "modelName": "Model T",
+        "BrandId": 5,
+        "createdAt": "2022-03-19T06:20:28.481Z",
+        "updatedAt": "2022-03-19T06:20:28.481Z",
+        "Cars": [
+            {
+                "id": 1,
+                "name": "Ford Model T Touring- 1918",
+                "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
+                "fuel": "Gasoline",
+                "seats": 2,
+                "mileage": 70000,
+                "price": 100000000,
+                "color": "black",
+                "yearMade": "1918-04-23T00:00:00.000Z",
+                "passedInspection": true,
+                "DealerId": 1,
+                "TypeId": 1,
+                "createdAt": "2022-03-19T07:49:29.675Z",
+                "updatedAt": "2022-03-19T09:13:22.585Z"
+            }
+        ],
+        "Brand": {
+            "id": 5,
+            "name": "Ford",
+            "createdAt": "2022-03-19T06:20:28.473Z",
+            "updatedAt": "2022-03-19T06:20:28.473Z"
+        }
     },
     ...
 ]
 ```
 
-&nbsp;
-
-## 10. POST /pub/register
-
-Request:
-
-- body:
-
-```json
-{
-  "email": "string (required)",
-  "password": "string (required)"
-}
-```
-
-_Response (201 - Created)_
-
-```json
-{
-  "id": 14,
-  "email": "test@email.com"
-}
-```
-
-_Response (400 - Bad Request)_
-
-```json
-{
-  "message": ["Email must be inputted"]
-}
-OR
-{
-  "message": ["Must be an email format"]
-}
-OR
-{
-  "message": ["Password must be inputted"]
-}
-OR
-{
-  "message": ["Password minimum 5 characters"]
-}
-OR
-{
-  "message": ["email must be unique"]
-}
-```
-
-&nbsp;
-
-## 11. POST /pub/login
-
-Request:
-
-- body:
-
-```json
-{
-  "email": "string (required)",
-  "password": "string (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Login Succesful",
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoidGVzdEBlbWFpbC5jb20iLCJyb2xlIjoiQ3VzdG9tZXIiLCJpYXQiOjE2NDQzMzg3NTAsImV4cCI6MTY0NDM0MjM1MH0.NYHNrAPSGWYH_vwgbJdsUmGxPREnHqf4xdaMMOVDfrY",
-  "role": "Customer",
-  "authorId": 14,
-  "email": "test@email.com"
-}
-```
-
-_Response (401 - Unauthorized)_
-
-```json
-{
-  "message": "Invalid email or password"
-}
-```
-
-&nbsp;
-
-## 12. POST pub/login-google
+## 29. GET /types/:id
 
 Description:
 
-- Login customer with google account
-
-Request:
-
-- body:
-
-```json
-{
-  "token": "string (required)"
-}
-```
+- Get specific types/car model based on type/model id
 
 _Response (200 - OK)_
 
 ```json
 {
-  "message": "Login Succesful",
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImVtYWlsIjoibXdvcmtlcjEzMkBnbWFpbC5jb20iLCJyb2xlIjoiU3RhZmYiLCJpYXQiOjE2NDM4MTU3NTcsImV4cCI6MTY0MzgxOTM1N30.t6yzKo7ldevQFvWLuEr9rgfBMH-vhzLRECtGc9HRK20",
-  "role": "Customer",
-  "authorId": 12,
-  "email": "jubelsinaga13@gmail.com"
-}
-```
-
-&nbsp;
-
-## 13. GET /pub/products
-
-Description:
-
-- Get all products from database
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- query:
-
-```json
-{
-  "page": "integer",
-  "size": "integer (required)",
-  "name": "string",
-  "maxPrice": "integer"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "count": 15,
-  "rows": [
+  "id": 1,
+  "modelName": "Model T",
+  "BrandId": 5,
+  "createdAt": "2022-03-19T06:20:28.481Z",
+  "updatedAt": "2022-03-19T06:20:28.481Z",
+  "Cars": [
     {
-      "id": 17,
-      "name": "Sofa Tamu 8",
-      "description": "Sofa bagus untuk ruang tamu anda",
-      "price": 2000000,
-      "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/905/0990531_PE819028_S4.jpg",
-      "categoryId": 1,
-      "authorId": 1,
-      "status": "active",
-      "createdAt": "2022-02-15T11:12:29.324Z",
-      "updatedAt": "2022-02-15T11:12:29.324Z"
-    },
-    {
-      "id": 18,
-      "name": "Meja makan 9",
-      "description": "Meja makan berkualitas untuk ruang makan anda",
-      "price": 1500000,
-      "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/452/0445221_PE595674_S4.jpg",
-      "categoryId": 9,
-      "authorId": 1,
-      "status": "active",
-      "createdAt": "2022-02-15T11:12:29.324Z",
-      "updatedAt": "2022-02-15T11:12:29.324Z"
-    },
-    {
-      "id": 19,
-      "name": "Sofa Tamu 10",
-      "description": "Sofa bagus untuk ruang tamu anda",
-      "price": 2000000,
-      "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/905/0990531_PE819028_S4.jpg",
-      "categoryId": 1,
-      "authorId": 1,
-      "status": "active",
-      "createdAt": "2022-02-15T11:12:30.291Z",
-      "updatedAt": "2022-02-15T11:12:30.291Z"
+      "id": 1,
+      "name": "Ford Model T Touring- 1918",
+      "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
+      "fuel": "Gasoline",
+      "seats": 2,
+      "mileage": 70000,
+      "price": 100000000,
+      "color": "black",
+      "yearMade": "1918-04-23T00:00:00.000Z",
+      "passedInspection": true,
+      "DealerId": 1,
+      "TypeId": 1,
+      "createdAt": "2022-03-19T07:49:29.675Z",
+      "updatedAt": "2022-03-19T09:13:22.585Z"
     }
   ],
-  "totalPages": 5
-}
-```
-
-&nbsp;
-
-## 14. GET /pub/products/:id
-
-Description:
-
-- Get product by id
-
-Request:
-
-- params:
-
-```json
-{
-  "id": "integer"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "id": 1,
-  "name": "Sofa Tamu",
-  "description": "Sofa bagus untuk ruang tamu anda",
-  "price": 2000000,
-  "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/905/0990531_PE819028_S4.jpg",
-  "categoryId": 1,
-  "authorId": 1,
-  "status": "active",
-  "createdAt": "2022-02-15T11:11:38.986Z",
-  "updatedAt": "2022-02-15T11:11:38.986Z"
-}
-```
-
-&nbsp;
-
-## 15. GET /pub/histories
-
-Description:
-
-- Get history of products
-
-Request:
-
-- headers:
-
-```json
-{
-  "token": "string (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-[
-    {
-        "id": 8,
-        "entityId": 1,
-        "title": "Sofa Tamu",
-        "description": "Entity with id 1 status hase been updated from active into active",
-        "updatedBy": "jack@gmail.com",
-        "createdAt": "2022-02-07T15:54:56.538Z",
-        "updatedAt": "2022-02-07T15:54:56.538Z"
-    },
-    {
-        "id": 9,
-        "entityId": 4,
-        "title": "james",
-        "description": "New product with id 4 created",
-        "updatedBy": "jack@gmail.com",
-        "createdAt": "2022-02-07T15:56:32.280Z",
-        "updatedAt": "2022-02-07T15:56:32.280Z"
-    },
-    ...
-]
-```
-
-&nbsp;
-
-## 16. PATCH /products/:id
-
-Description:
-
-- Change status of a product
-
-Request:
-
-- headers:
-
-```json
-{
-  "token": "string (required)"
-}
-```
-
-- body:
-
-```json
-{
-  "status": "string"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "updated": {
+  "Brand": {
     "id": 5,
-    "name": "Meja makan",
-    "description": "Meja makan berkualitas untuk ruang makan anda",
-    "price": 1500000,
-    "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/452/0445221_PE595674_S4.jpg",
-    "categoryId": 9,
-    "authorId": 1,
-    "status": "archieved",
-    "createdAt": "2022-02-07T13:59:17.021Z",
-    "updatedAt": "2022-02-10T12:14:42.805Z"
-  },
-  "history": {
-    "id": 25,
-    "entityId": 5,
-    "title": "Meja makan",
-    "description": "Entity with id 5 status hase been updated from inactive into archieved",
-    "updatedBy": "jack@gmail.com",
-    "updatedAt": "2022-02-10T12:14:42.824Z",
-    "createdAt": "2022-02-10T12:14:42.824Z"
+    "name": "Ford",
+    "createdAt": "2022-03-19T06:20:28.473Z",
+    "updatedAt": "2022-03-19T06:20:28.473Z"
   }
-}
-```
-
-_Response (400 - Bad Request)_
-
-```json
-{
-  "message": ["Value must be active, inactive, or archieved"]
-}
-```
-
-&nbsp;
-
-## 17. GET /pub/wishlist
-
-Description:
-
-- Get wishlist for a registered user
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-[
-  {
-    "id": 5,
-    "Product": {
-      "id": 21,
-      "name": "Sofa Tamu 12",
-      "description": "Sofa bagus untuk ruang tamu anda",
-      "price": 2000000,
-      "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/905/0990531_PE819028_S4.jpg",
-      "categoryId": 1,
-      "authorId": 1,
-      "status": "active",
-      "createdAt": "2022-02-15T11:12:31.269Z",
-      "updatedAt": "2022-02-15T11:12:31.269Z"
-    }
-  },
-  {
-    "id": 6,
-    "Product": {
-      "id": 18,
-      "name": "Meja makan 9",
-      "description": "Meja makan berkualitas untuk ruang makan anda",
-      "price": 1500000,
-      "imgUrl": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/452/0445221_PE595674_S4.jpg",
-      "categoryId": 9,
-      "authorId": 1,
-      "status": "active",
-      "createdAt": "2022-02-15T11:12:29.324Z",
-      "updatedAt": "2022-02-15T11:12:29.324Z"
-    }
-  },
- ...
-]
-```
-
-&nbsp;
-
-## 18. POST /pub/wishlist/:productId
-
-Description:
-
-- Add wishlist for login user
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "productId": "integer (required)"
-}
-```
-
-_Response (201 - Created)_
-
-```json
-{
-  "UserId": 4,
-  "ProductId": 12,
-  "updatedAt": "2022-02-19T08:10:13.734Z",
-  "createdAt": "2022-02-19T08:10:13.734Z"
-}
-```
-
-&nbsp;
-
-## 19. DELETE /pub/wishlist/:id
-
-Description:
-
-- Delete a wishlist
-
-Request:
-
-- body:
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
 }
 ```
 
@@ -915,46 +1573,7 @@ _Response (404 - Not Found)_
 
 ```json
 {
-  "message": "Item not found"
-}
-```
-
-_Response (200 - Ok)_
-
-```json
-{
-  "message": "Wishlist deleted successfully"
-}
-```
-
-&nbsp;
-
-## 20. POST /pub/qrcode
-
-Description:
-
-- Get qr-code
-
-Request:
-
-- body:
-
-```json
-{
-  "detailUrl": "string (required)"
-}
-```
-
-_Response (200 - Ok)_
-
-```json
-{
-  "success": true,
-  "qrcode": "data:image/png;base64,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",
-  "size": {
-    "width": 400,
-    "height": 400
-  }
+  "message": "Type not found"
 }
 ```
 
@@ -975,14 +1594,6 @@ _Response (401 - Unauthorized)_
 ```json
 {
   "message": "Invalid token or user"
-}
-```
-
-_Response (403 - Forbidden)_
-
-```json
-{
-  "message": "You are not authorized to access this resource"
 }
 ```
 

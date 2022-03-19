@@ -9,7 +9,7 @@ const getKolong = async (req, res, next) => {
       throw {
         code: 404,
         name: "NOT_FOUND",
-        message: "Interior inspection not found",
+        message: "Kolong inspection not found",
       };
     }
 
@@ -40,7 +40,7 @@ const changeKolongInsp = async (req, res, next) => {
       throw {
         code: 404,
         name: "NOT_FOUND",
-        message: "Interior inspection not found",
+        message: "Kolong inspection not found",
       };
     }
 
