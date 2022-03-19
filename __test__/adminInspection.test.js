@@ -657,6 +657,19 @@ describe("Exterior routes", () => {
           done(err);
         });
     });
+
+    it("should return correct response (200) when searching for exterior inspection by id", (done) => {
+      request(app)
+        .get("/inspections/exterior-detail/1")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
   });
 
   describe("PATCH /inspections/exterior-detail -- failed test", () => {
@@ -665,6 +678,19 @@ describe("Exterior routes", () => {
         .patch("/inspections/exterior-detail/100")
         .set("access_token", access_token)
         .send({ chassis: true, bumper: true, lights: true })
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    it("should return correct response (404) when there is no exterior inspection data", (done) => {
+      request(app)
+        .get("/inspections/exterior-detail/100")
         .then((res) => {
           expect(res.status).toBe(404);
           expect(res.body).toBeInstanceOf(Object);

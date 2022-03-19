@@ -11,7 +11,12 @@ const {
 } = require("../controllers/inspectionController");
 
 const adminAuthentication = require("../middlewares/adminAuth");
-const changeExteriorInspection = require("../controllers/exteriorController");
+
+const {
+  changeExteriorInspection,
+  getExterior,
+} = require("../controllers/exteriorController");
+
 const {
   changeInteriorInspection,
   getInterior,
@@ -36,6 +41,8 @@ router.patch(
   adminAuthentication,
   changeExteriorInspection
 );
+
+router.get("/exterior-detail/:id", getExterior);
 
 router.patch(
   "/interior-detail/:id",
