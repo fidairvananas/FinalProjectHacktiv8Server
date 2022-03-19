@@ -332,9 +332,45 @@ describe("Car routes", () => {
   });
 
   describe("GET /cars/:id - success test", () => {
+    beforeEach((done) => {
+      let data = [
+        {
+          id: 3,
+          name: "Ford Mustang G5",
+          description: "This is sport car",
+          fuel: "Solar",
+          seats: 2,
+          mileage: 12000,
+          price: 1000000,
+          color: "black",
+          yearMade: "1989-04-23T18:25:43.511Z",
+          TypeId: 5,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ];
+      queryInterface
+        .bulkInsert("Cars", data, {})
+        .then((res) => {
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+    afterEach((done) => {
+      queryInterface
+        .bulkDelete("Cars", null, {})
+        .then((res) => {
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
     test("should return correct response (200) if car with id is in database", (done) => {
       request(app)
-        .get(`/cars/1`)
+        .get(`/cars/3`)
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -699,6 +735,17 @@ describe("Car routes", () => {
       ];
       queryInterface
         .bulkInsert("Cars", data, {})
+        .then((res) => {
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    afterEach((done) => {
+      queryInterface
+        .bulkDelete("Cars", null, {})
         .then((res) => {
           done();
         })
