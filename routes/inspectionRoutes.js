@@ -6,43 +6,58 @@ const {
   changeInterior,
   changeRoadTest,
   changeKolong,
+  getInspections,
+  getInspection,
 } = require("../controllers/inspectionController");
 
 const adminAuthentication = require("../middlewares/adminAuth");
-const adminAuthorization = require("../middlewares/adminAuthorization");
+
+const {
+  changeExteriorInspection,
+  getExterior,
+} = require("../controllers/exteriorController");
+
+const {
+  changeInteriorInspection,
+  getInterior,
+} = require("../controllers/interiorController");
+
+const {
+  getKolong,
+  changeKolongInsp,
+} = require("../controllers/kolongController");
+const {
+  getRoadTest,
+  changeRoadTestInsp,
+} = require("../controllers/roadtestController");
+
+router.get("/", getInspections);
+router.get("/:id", getInspection);
+
+router.patch("/main/:id", adminAuthentication, changeMainInspection);
+router.patch("/exterior/:id", adminAuthentication, changeExterior);
+router.patch("/interior/:id", adminAuthentication, changeInterior);
+router.patch("/roadtest/:id", adminAuthentication, changeRoadTest);
+router.patch("/kolong/:id", adminAuthentication, changeKolong);
 
 router.patch(
-  "/main/:id",
+  "/exterior-detail/:id",
   adminAuthentication,
-  adminAuthorization,
-  changeMainInspection
+  changeExteriorInspection
 );
+router.get("/exterior-detail/:id", getExterior);
 
 router.patch(
-  "/exterior/:id",
+  "/interior-detail/:id",
   adminAuthentication,
-  adminAuthorization,
-  changeExterior
+  changeInteriorInspection
 );
+router.get("/interior-detail/:id", getInterior);
 
-router.patch(
-  "/interior/:id",
-  adminAuthentication,
-  adminAuthorization,
-  changeInterior
-);
+router.get("/kolong-detail/:id", getKolong);
+router.patch("/kolong-detail/:id", adminAuthentication, changeKolongInsp);
 
-router.patch(
-  "/roadtest/:id",
-  adminAuthentication,
-  adminAuthorization,
-  changeRoadTest
-);
+router.get("/roadtest-detail/:id", getRoadTest);
+router.patch("/roadtest-detail/:id", adminAuthentication, changeRoadTestInsp);
 
-router.patch(
-  "/kolong/:id",
-  adminAuthentication,
-  adminAuthorization,
-  changeKolong
-);
 module.exports = router;
