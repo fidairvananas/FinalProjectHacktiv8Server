@@ -35,6 +35,7 @@ const getCars = async (req, res, next) => {
             "storeAddress",
           ],
         },
+        { model: Image },
       ],
     });
 
@@ -164,6 +165,7 @@ const getCar = async (req, res, next) => {
             "storeAddress",
           ],
         },
+        { model: Image },
       ],
     });
 
