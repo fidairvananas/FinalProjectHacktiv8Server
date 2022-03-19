@@ -576,6 +576,17 @@ describe("Interior routes", () => {
           done(err);
         });
     });
+
+    it("should return correct response (200) when request for interior inspection by id complete", (done) => {
+      request(app)
+        .get("/inspections/interior-detail/1")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => done(err));
+    });
   });
 
   describe("PATCH /inspections/exterior-detail -- failed test", () => {
@@ -584,6 +595,19 @@ describe("Interior routes", () => {
         .patch("/inspections/interior-detail/100")
         .set("access_token", access_token)
         .send({ speedometer: true, klakson: true, steeringWheel: true })
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    it("should return correct response (404) when there is no interior inspection data", (done) => {
+      request(app)
+        .get("/inspections/interior-detail/100")
         .then((res) => {
           expect(res.status).toBe(404);
           expect(res.body).toBeInstanceOf(Object);

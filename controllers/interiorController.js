@@ -1,5 +1,24 @@
 const { Interior } = require("../models");
 
+const getInterior = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const interior = await Interior.findByPk(id);
+
+    if (!interior) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Interior inspection not found",
+      };
+    }
+
+    res.status(200).json(interior);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const changeInteriorInspection = async (req, res, next) => {
   try {
     const {
@@ -48,4 +67,4 @@ const changeInteriorInspection = async (req, res, next) => {
   }
 };
 
-module.exports = changeInteriorInspection;
+module.exports = { changeInteriorInspection, getInterior };

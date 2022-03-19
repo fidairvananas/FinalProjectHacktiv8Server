@@ -12,7 +12,10 @@ const {
 
 const adminAuthentication = require("../middlewares/adminAuth");
 const changeExteriorInspection = require("../controllers/exteriorController");
-const changeInteriorInspection = require("../controllers/interiorController");
+const {
+  changeInteriorInspection,
+  getInterior,
+} = require("../controllers/interiorController");
 
 router.get("/", getInspections);
 
@@ -39,5 +42,7 @@ router.patch(
   adminAuthentication,
   changeInteriorInspection
 );
+
+router.get("/interior-detail/:id", getInterior);
 
 module.exports = router;
