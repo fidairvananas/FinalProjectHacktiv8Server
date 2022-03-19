@@ -26,6 +26,10 @@ const {
   getKolong,
   changeKolongInsp,
 } = require("../controllers/kolongController");
+const {
+  getRoadTest,
+  changeRoadTestInsp,
+} = require("../controllers/roadtestController");
 
 router.get("/", getInspections);
 router.get("/:id", getInspection);
@@ -52,5 +56,8 @@ router.get("/interior-detail/:id", getInterior);
 
 router.get("/kolong-detail/:id", getKolong);
 router.patch("/kolong-detail/:id", adminAuthentication, changeKolongInsp);
+
+router.get("/roadtest-detail/:id", getRoadTest);
+router.patch("/roadtest-detail/:id", adminAuthentication, changeRoadTestInsp);
 
 module.exports = router;

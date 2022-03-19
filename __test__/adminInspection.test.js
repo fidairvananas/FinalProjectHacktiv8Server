@@ -1,6 +1,13 @@
 const app = require("../app");
 const request = require("supertest");
-const { sequelize, Admin, Interior, Exterior, Kolong } = require("../models");
+const {
+  sequelize,
+  Admin,
+  Interior,
+  Exterior,
+  Kolong,
+  RoadTest,
+} = require("../models");
 const { queryInterface } = sequelize;
 const { login } = require("../controllers/adminController");
 
@@ -29,7 +36,7 @@ beforeAll((done) => {
     updatedAt: new Date(),
   };
   let inspection = {
-    id: 2,
+    id: 1,
     mainInspection: false,
     exteriorInspection: false,
     interiorInspection: false,
@@ -285,7 +292,7 @@ describe("Inspection test", () => {
 
     test("should return correct response (200) when reads inspection by id", (done) => {
       request(app)
-        .get("/inspections/2")
+        .get("/inspections/1")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -370,7 +377,7 @@ describe("Inspection test", () => {
   describe("PATCH /inspections - success test", () => {
     test("should return correct response (200) when admin is authorized to change main inspection status", (done) => {
       request(app)
-        .patch("/inspections/main/2")
+        .patch("/inspections/main/1")
         .send({ mainInspection: true })
         .set("access_token", access_token)
         .then((res) => {
@@ -385,7 +392,7 @@ describe("Inspection test", () => {
 
     test("should return correct response (200) when admin is authorized to change exterior inspection status", (done) => {
       request(app)
-        .patch("/inspections/exterior/2")
+        .patch("/inspections/exterior/1")
         .send({ exteriorInspection: true })
         .set("access_token", access_token)
         .then((res) => {
@@ -400,7 +407,7 @@ describe("Inspection test", () => {
 
     test("should return correct response (200) when admin is authorized to change interior inspection status", (done) => {
       request(app)
-        .patch("/inspections/interior/2")
+        .patch("/inspections/interior/1")
         .send({ interiorInspection: true })
         .set("access_token", access_token)
         .then((res) => {
@@ -415,7 +422,7 @@ describe("Inspection test", () => {
 
     test("should return correct response (200) when admin is authorized to change roadTest inspection status", (done) => {
       request(app)
-        .patch("/inspections/roadTest/2")
+        .patch("/inspections/roadTest/1")
         .send({ roadTest: true })
         .set("access_token", access_token)
         .then((res) => {
@@ -430,7 +437,7 @@ describe("Inspection test", () => {
 
     test("should return correct response (200) when admin is authorized to change kolong inspection status", (done) => {
       request(app)
-        .patch("/inspections/kolong/2")
+        .patch("/inspections/kolong/1")
         .send({ kolongTest: true })
         .set("access_token", access_token)
         .then((res) => {
@@ -447,7 +454,7 @@ describe("Inspection test", () => {
   describe("PATCH /inspections - failed test", () => {
     test("should return correct response (401) when other user than admin trying to change inspection status", (done) => {
       request(app)
-        .patch("/inspections/main/2")
+        .patch("/inspections/main/1")
         .send({ mainInspection: true })
         .set(
           "access_token",
@@ -545,7 +552,7 @@ describe("Inspection test", () => {
 describe("Interior routes", () => {
   beforeEach(async () => {
     let interior = {
-      id: 1,
+      id: 3,
       speedometer: false,
       klakson: false,
       steeringWheel: false,
@@ -554,17 +561,17 @@ describe("Interior routes", () => {
       seats: false,
       gasPedal: false,
       brakePedal: false,
-      InspectionId: 2,
+      InspectionId: 1,
     };
     const newInt = await Interior.create(interior);
   });
   afterEach(async () => {
-    await Interior.destroy({ where: { id: 1 } });
+    await Interior.destroy({ where: { id: 3 } });
   });
   describe("PATCH /inspections/interior-detail -- success test", () => {
     it("should return correct response (200) admin update inspection status", (done) => {
       request(app)
-        .patch("/inspections/interior-detail/1")
+        .patch("/inspections/interior-detail/3")
         .set("access_token", access_token)
         .send({ speedometer: true, klakson: true, steeringWheel: true })
         .then((res) => {
@@ -576,10 +583,12 @@ describe("Interior routes", () => {
           done(err);
         });
     });
+  });
 
+  describe("GET /inspections/interior-detail -- success test", () => {
     it("should return correct response (200) when request for interior inspection by id complete", (done) => {
       request(app)
-        .get("/inspections/interior-detail/1")
+        .get("/inspections/interior-detail/3")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -589,7 +598,7 @@ describe("Interior routes", () => {
     });
   });
 
-  describe("PATCH /inspections/exterior-detail -- failed test", () => {
+  describe("PATCH /inspections/interior-detail -- failed test", () => {
     it("should return correct response (404) when there is no interior inspection data", (done) => {
       request(app)
         .patch("/inspections/interior-detail/100")
@@ -604,7 +613,9 @@ describe("Interior routes", () => {
           done(err);
         });
     });
+  });
 
+  describe("GET /inspections/interior-detail -- failed test", () => {
     it("should return correct response (404) when there is no interior inspection data", (done) => {
       request(app)
         .get("/inspections/interior-detail/100")
@@ -625,7 +636,7 @@ describe("Interior routes", () => {
 describe("Exterior routes", () => {
   beforeEach(async () => {
     let exterior = {
-      id: 1,
+      id: 10,
       chassis: true,
       bumper: true,
       lights: true,
@@ -635,17 +646,18 @@ describe("Exterior routes", () => {
       kacaSamping: false,
       kacaBelakang: false,
       tire: false,
-      InspectionId: 2,
+      InspectionId: 1,
     };
     const newEx = await Exterior.create(exterior);
   });
   afterEach(async () => {
-    await Exterior.destroy({ where: { id: 1 } });
+    await Exterior.destroy({ where: { id: 10 } });
   });
-  describe("PATCH /inspections/exterior-detail -- success test", () => {
+
+  describe("PATCH /inspections/exterior-detail/:id -- success test", () => {
     it("should return correct response (200) when admin update inspection status", (done) => {
       request(app)
-        .patch("/inspections/exterior-detail/1")
+        .patch("/inspections/exterior-detail/10")
         .set("access_token", access_token)
         .send({ speedometer: true, klakson: true, steeringWheel: true })
         .then((res) => {
@@ -657,10 +669,12 @@ describe("Exterior routes", () => {
           done(err);
         });
     });
+  });
 
+  describe("GET /inspections/exterior-detail/:id -- success test", () => {
     it("should return correct response (200) when searching for exterior inspection by id", (done) => {
       request(app)
-        .get("/inspections/exterior-detail/1")
+        .get("/inspections/exterior-detail/10")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -687,7 +701,9 @@ describe("Exterior routes", () => {
           done(err);
         });
     });
+  });
 
+  describe("GET /inspections/exterior-detail/:id -- failed test", () => {
     it("should return correct response (404) when there is no exterior inspection data", (done) => {
       request(app)
         .get("/inspections/exterior-detail/100")
@@ -708,7 +724,7 @@ describe("Exterior routes", () => {
 describe("Kolong test routes", () => {
   beforeEach(async () => {
     let kolong = {
-      id: 1,
+      id: 10,
       oliMesin: false,
       transmission: false,
       minyakRem: false,
@@ -719,19 +735,20 @@ describe("Kolong test routes", () => {
       kestabilanBan: false,
       shockBreaker: false,
       masterBrake: false,
-      InspectionId: 2,
+      InspectionId: 1,
     };
     const newKol = await Kolong.create(kolong);
     console.log(newKol);
   });
 
   afterEach(async () => {
-    await Kolong.destroy({ where: { id: 1 } });
+    await Kolong.destroy({ where: { id: 10 } });
   });
+
   describe("PATCH /inspections/kolong-detail -- success test", () => {
     it("should return correct response (200) when admin update inspection status", (done) => {
       request(app)
-        .patch("/inspections/kolong-detail/1")
+        .patch("/inspections/kolong-detail/10")
         .set("access_token", access_token)
         .send({ oliMesin: true, aki: true, knalpot: true })
         .then((res) => {
@@ -743,10 +760,12 @@ describe("Kolong test routes", () => {
           done(err);
         });
     });
+  });
 
+  describe("GET /inspections/kolong-detail/:id -- success test", () => {
     it("should return correct response (200) when searching for kolong inspection by id", (done) => {
       request(app)
-        .get("/inspections/kolong-detail/1")
+        .get("/inspections/kolong-detail/10")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -773,10 +792,98 @@ describe("Kolong test routes", () => {
           done(err);
         });
     });
+  });
 
+  describe("GET /inspections/kolong-detail/:id -- failed test", () => {
     it("should return correct response (404) when there is no kolong inspection data", (done) => {
       request(app)
         .get("/inspections/kolong-detail/100")
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
+// Road test routes
+
+describe("Road test routes", () => {
+  beforeEach(async () => {
+    let roadtest = {
+      id: 3,
+      engineStarting: false,
+      engineIdling: false,
+      steeringSystem: false,
+      acceleration: false,
+      engineSound: false,
+      brake: false,
+      InspectionId: 1,
+    };
+    const newRoad = await RoadTest.create(roadtest);
+  });
+
+  afterEach(async () => {
+    await RoadTest.destroy({ where: { id: 3 } });
+  });
+
+  describe("PATCH /inspections/roadtest-detail -- success test", () => {
+    it("should return correct response (200) when admin update inspection status", (done) => {
+      request(app)
+        .patch("/inspections/roadtest-detail/3")
+        .set("access_token", access_token)
+        .send({ brake: true, engineStarting: true, engineSound: true })
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /inspections/roadtest-detail/:id -- success test", () => {
+    it("should return correct response (200) when searching for roadtest inspection by id", (done) => {
+      request(app)
+        .get("/inspections/roadtest-detail/3")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH /inspections/roadtest-detail -- failed test", () => {
+    it("should return correct response (404) when there is no roadtest inspection data", (done) => {
+      request(app)
+        .patch("/inspections/roadtest-detail/100")
+        .set("access_token", access_token)
+        .send({ brake: true, engineStarting: true, engineSound: true })
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /inspections/roadtest-detail/:id -- failed test", () => {
+    it("should return correct response (404) when there is no roadtest inspection data", (done) => {
+      request(app)
+        .get("/inspections/roadtest-detail/100")
         .then((res) => {
           expect(res.status).toBe(404);
           expect(res.body).toBeInstanceOf(Object);
