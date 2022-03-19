@@ -1,6 +1,6 @@
 const app = require("../app");
 const request = require("supertest");
-const { sequelize, Admin, Interior, Exterior } = require("../models");
+const { sequelize, Admin, Interior, Exterior, Kolong } = require("../models");
 const { queryInterface } = sequelize;
 const { login } = require("../controllers/adminController");
 
@@ -691,6 +691,92 @@ describe("Exterior routes", () => {
     it("should return correct response (404) when there is no exterior inspection data", (done) => {
       request(app)
         .get("/inspections/exterior-detail/100")
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+});
+
+//Kolong test
+
+describe("Kolong test routes", () => {
+  beforeEach(async () => {
+    let kolong = {
+      id: 1,
+      oliMesin: false,
+      transmission: false,
+      minyakRem: false,
+      radiator: false,
+      aki: false,
+      bottomCover: false,
+      knalpot: false,
+      kestabilanBan: false,
+      shockBreaker: false,
+      masterBrake: false,
+      InspectionId: 2,
+    };
+    const newKol = await Kolong.create(kolong);
+    console.log(newKol);
+  });
+
+  afterEach(async () => {
+    await Kolong.destroy({ where: { id: 1 } });
+  });
+  describe("PATCH /inspections/kolong-detail -- success test", () => {
+    it("should return correct response (200) when admin update inspection status", (done) => {
+      request(app)
+        .patch("/inspections/kolong-detail/1")
+        .set("access_token", access_token)
+        .send({ oliMesin: true, aki: true, knalpot: true })
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    it("should return correct response (200) when searching for kolong inspection by id", (done) => {
+      request(app)
+        .get("/inspections/kolong-detail/1")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("PATCH /inspections/kolong-detail -- failed test", () => {
+    it("should return correct response (404) when there is no kolong inspection data", (done) => {
+      request(app)
+        .patch("/inspections/kolong-detail/100")
+        .set("access_token", access_token)
+        .send({ oliMesin: true, aki: true, knalpot: true })
+        .then((res) => {
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+
+    it("should return correct response (404) when there is no kolong inspection data", (done) => {
+      request(app)
+        .get("/inspections/kolong-detail/100")
         .then((res) => {
           expect(res.status).toBe(404);
           expect(res.body).toBeInstanceOf(Object);

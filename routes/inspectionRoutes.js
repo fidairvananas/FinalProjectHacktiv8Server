@@ -22,18 +22,18 @@ const {
   getInterior,
 } = require("../controllers/interiorController");
 
-router.get("/", getInspections);
+const {
+  getKolong,
+  changeKolongInsp,
+} = require("../controllers/kolongController");
 
+router.get("/", getInspections);
 router.get("/:id", getInspection);
 
 router.patch("/main/:id", adminAuthentication, changeMainInspection);
-
 router.patch("/exterior/:id", adminAuthentication, changeExterior);
-
 router.patch("/interior/:id", adminAuthentication, changeInterior);
-
 router.patch("/roadtest/:id", adminAuthentication, changeRoadTest);
-
 router.patch("/kolong/:id", adminAuthentication, changeKolong);
 
 router.patch(
@@ -41,7 +41,6 @@ router.patch(
   adminAuthentication,
   changeExteriorInspection
 );
-
 router.get("/exterior-detail/:id", getExterior);
 
 router.patch(
@@ -49,7 +48,9 @@ router.patch(
   adminAuthentication,
   changeInteriorInspection
 );
-
 router.get("/interior-detail/:id", getInterior);
+
+router.get("/kolong-detail/:id", getKolong);
+router.patch("/kolong-detail/:id", adminAuthentication, changeKolongInsp);
 
 module.exports = router;
