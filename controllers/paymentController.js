@@ -8,7 +8,8 @@ const {
   Brand,
   sequelize,
 } = require("../models");
-const CLIENT_KEY = process.env.CLIENT_KEY;
+const add = require("date-fns/add");
+const { format } = require("date-fns");
 
 //! CASH PAYMENT
 const payment = async (req, res, next) => {
@@ -91,6 +92,8 @@ const payment = async (req, res, next) => {
       orderId = "OTOSIC-" + num + "-" + new Date().getTime();
     }
 
+    const date = format(new Date(add(new Date(), {days: 1})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
+
     let parameter = {
       transaction_details: {
         order_id: orderId,
@@ -166,7 +169,7 @@ const payment = async (req, res, next) => {
         finish: "https://demo.midtrans.com",
       },
       expiry: {
-        start_time: "2022-04-17 19:31:01 +0700",
+        start_time: date,
         unit: "minutes",
         duration: 1,
       },
@@ -207,7 +210,7 @@ const payment = async (req, res, next) => {
       installment: false,
       currentInstallment: 0,
       totalInstallment: 0,
-      saved_token_id: "CASH"
+      saved_token_id: "CASH",
     });
 
     res.status(200).json({
@@ -298,6 +301,18 @@ const updatePayment = async (req, res, next) => {
       transaction: t,
     });
 
+    await Car.update(
+      {
+        status: "sold",
+      },
+      {
+        where: {
+          id: CarId,
+        },
+        transaction: t,
+      }
+    );
+
     res.status(200).json({ message: "Payment status already updated." });
 
     await t.commit();
@@ -362,6 +377,8 @@ const firstInstallment = async (req, res, next) => {
 
     const installment = Math.ceil(borrow / term + borrow * 0.01);
 
+    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
+
     let parameter = {
       name,
       amount: installment.toString(),
@@ -372,7 +389,7 @@ const firstInstallment = async (req, res, next) => {
         interval: 1,
         interval_unit: "month",
         max_interval: +term,
-        start_time: "2022-03-22 06:22:01 +0700",
+        start_time: date,
       },
       metadata: {
         description: "Recurring payment for " + car.name,
@@ -462,13 +479,11 @@ const firstInstallment = async (req, res, next) => {
 
     let payment = await core.charge(payload);
 
-    res
-      .status(200)
-      .json({
-        message: payment.status_message,
-        token: payment.token,
-        paymentUrl: payment.redirect_url,
-      });
+    res.status(200).json({
+      message: payment.status_message,
+      token: payment.token,
+      paymentUrl: payment.redirect_url,
+    });
 
     await t.commit();
   } catch (err) {
@@ -489,7 +504,7 @@ const nextInstallment = async (req, res, next) => {
       where: {
         CarId,
       },
-      order: [['id', 'DESC']]
+      order: [["id", "DESC"]],
     });
 
     if (history.length >= history[0].totalInstallment) {
@@ -502,10 +517,15 @@ const nextInstallment = async (req, res, next) => {
 
     let name;
 
-    let num = history.length ? history[0].dataValues.orderId.split('-').map((el, i) => {
-      if (i == 3) el = +el + 1
-      return el
-    }).join('-') : 1;
+    let num = history.length
+      ? history[0].dataValues.orderId
+          .split("-")
+          .map((el, i) => {
+            if (i == 3) el = +el + 1;
+            return el;
+          })
+          .join("-")
+      : 1;
 
     if (!history.length) {
       name = "MONTHLY_2021_" + CarId + "_" + num;
@@ -514,6 +534,8 @@ const nextInstallment = async (req, res, next) => {
     }
 
     const resp = await core.getSubscription(car.subscriptionId);
+    
+    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss')
 
     let updateSubscriptionParam = {
       name,
@@ -522,7 +544,7 @@ const nextInstallment = async (req, res, next) => {
       token: resp.token,
       schedule: {
         interval: 1,
-        next_execution_at: "2022-04-19 07:22:01",
+        next_execution_at: date,
       },
     };
 
@@ -536,11 +558,14 @@ const nextInstallment = async (req, res, next) => {
         paidOff: false,
         price: car.price,
         BuyerId: history[0].BuyerId,
-        orderId: history[0].dataValues.orderId.split('-').map((el, i) => {
-          if (i == 2) el = new Date().getTime()
-          if (i == 3) el = +el + 1
-          return el
-        }).join('-'),
+        orderId: history[0].dataValues.orderId
+          .split("-")
+          .map((el, i) => {
+            if (i == 2) el = new Date().getTime();
+            if (i == 3) el = +el + 1;
+            return el;
+          })
+          .join("-"),
         CarId,
         installment: true,
         currentInstallment: history[history.length - 1].currentInstallment + 1,
@@ -566,10 +591,13 @@ const nextInstallment = async (req, res, next) => {
 
     const buyer = await Buyer.findByPk(history[0].BuyerId);
 
-    let order_id = history[0].dataValues.orderId.split('-').map((el, i) => {
-      if (i == 3) el = +el + 1
-      return el
-    }).join('-')
+    let order_id = history[0].dataValues.orderId
+      .split("-")
+      .map((el, i) => {
+        if (i == 3) el = +el + 1;
+        return el;
+      })
+      .join("-");
 
     const payload = {
       payment_type: "credit_card",
@@ -618,7 +646,6 @@ const nextInstallment = async (req, res, next) => {
     await t.commit();
   } catch (err) {
     await t.rollback();
-    console.log(err)
     next(err);
   }
 };
