@@ -1,2 +1,77 @@
-const {generateToken} = require("./helpers/jwt")
+const inspection = {
+  id: 1,
+  mainInspection: false,
+  exteriorInspection: false,
+  interiorInspection: false,
+  roadTest: false,
+  kolongTest: false,
+  inspectedBy: "Admin",
+  CarId: 1,
+  createdAt: "2022-03-19T07:49:29.689Z",
+  updatedAt: "2022-03-19T07:49:29.689Z",
+  Exterior: {
+    id: 1,
+    chassis: true,
+    bumper: false,
+    lights: false,
+    roof: true,
+    spion: false,
+    windShield: true,
+    kacaSamping: false,
+    kacaBelakang: false,
+    tire: false,
+    InspectionId: 1,
+    createdAt: "2022-03-19T07:49:29.697Z",
+    updatedAt: "2022-03-19T07:49:29.697Z",
+  },
+  Interior: {
+    id: 1,
+    speedometer: false,
+    klakson: true,
+    steeringWheel: true,
+    rearViewMirror: false,
+    dashboard: false,
+    seats: true,
+    gasPedal: false,
+    brakePedal: false,
+    InspectionId: 1,
+    createdAt: "2022-03-19T07:49:29.693Z",
+    updatedAt: "2022-03-19T07:49:29.693Z",
+  },
+  RoadTest: {
+    id: 1,
+    engineStarting: true,
+    engineIdling: false,
+    steeringSystem: true,
+    acceleration: true,
+    engineSound: false,
+    brake: false,
+    InspectionId: 1,
+    createdAt: "2022-03-19T07:49:29.700Z",
+    updatedAt: "2022-03-19T07:49:29.700Z",
+  },
+  Kolong: {
+    id: 1,
+    oliMesin: true,
+    transmission: false,
+    minyakRem: false,
+    radiator: true,
+    aki: false,
+    bottomCover: false,
+    knalpot: true,
+    kestabilanBan: false,
+    shockBreaker: false,
+    masterBrake: false,
+    InspectionId: 1,
+    createdAt: "2022-03-19T07:49:29.702Z",
+    updatedAt: "2022-03-19T07:49:29.702Z",
+  },
+};
 
+const exteriorEntries = Object.entries(inspection.Exterior);
+
+console.log(exteriorEntries);
+
+const exteriorTrue = exteriorEntries.filter((el) => el[1] === true);
+
+console.log(exteriorTrue.length);
