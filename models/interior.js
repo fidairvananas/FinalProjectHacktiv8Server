@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       seats: DataTypes.BOOLEAN,
       gasPedal: DataTypes.BOOLEAN,
       brakePedal: DataTypes.BOOLEAN,
+      inspectedBy: DataTypes.STRING,
       InspectionId: {
         type: DataTypes.INTEGER,
         allowNull: false,

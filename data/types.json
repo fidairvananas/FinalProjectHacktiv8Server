@@ -1,0 +1,450 @@
+[
+  {
+    "modelName": "4000s",
+    "BrandId": 1
+  },
+  {
+    "modelName": "5000S",
+    "BrandId": 1
+  },
+  {
+    "modelName": "Coupe GT",
+    "BrandId": 1
+  },
+  {
+    "modelName": "Quattro",
+    "BrandId": 1
+  },
+  {
+    "modelName": "Century",
+    "BrandId": 2
+  },
+  {
+    "modelName": "Electra",
+    "BrandId": 2
+  },
+  {
+    "modelName": "LeSabre",
+    "BrandId": 2
+  },
+  {
+    "modelName": "Regal",
+    "BrandId": 2
+  },
+  {
+    "modelName": "Riviera",
+    "BrandId": 2
+  },
+  {
+    "modelName": "Skyhawk",
+    "BrandId": 2
+  },
+  {
+    "modelName": "Skylark",
+    "BrandId": 2
+  },
+  {
+    "modelName": "Somerset",
+    "BrandId": 2
+  },
+  {
+    "modelName": "Camaro",
+    "BrandId": 3
+  },
+  {
+    "modelName": "Caprice",
+    "BrandId": 3
+  },
+  {
+    "modelName": "Citation",
+    "BrandId": 3
+  },
+  {
+    "modelName": "Corvette",
+    "BrandId": 3
+  },
+  {
+    "modelName": "Aries",
+    "BrandId": 4
+  },
+  {
+    "modelName": "Caravan",
+    "BrandId": 4
+  },
+  {
+    "modelName": "Daytona",
+    "BrandId": 4
+  },
+  {
+    "modelName": "Bronco",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Bronco II",
+    "BrandId": 5
+  },
+  {
+    "modelName": "E-Series",
+    "BrandId": 5
+  },
+  {
+    "modelName": "E150",
+    "BrandId": 5
+  },
+  {
+    "modelName": "E250",
+    "BrandId": 5
+  },
+  {
+    "modelName": "EXP",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Escort",
+    "BrandId": 5
+  },
+  {
+    "modelName": "F-Series",
+    "BrandId": 5
+  },
+  {
+    "modelName": "F150",
+    "BrandId": 5
+  },
+  {
+    "modelName": "F250",
+    "BrandId": 5
+  },
+  {
+    "modelName": "LTD",
+    "BrandId": 5
+  },
+  {
+    "modelName": "LTD Crown Victoria",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Laser",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Model T",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Mustang",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Ranger",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Taurus",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Tempo",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Thunderbird",
+    "BrandId": 5
+  },
+  {
+    "modelName": "Accord",
+    "BrandId": 6
+  },
+  {
+    "modelName": "CR-X",
+    "BrandId": 6
+  },
+  {
+    "modelName": "Civic",
+    "BrandId": 6
+  },
+  {
+    "modelName": "Prelude",
+    "BrandId": 6
+  },
+  {
+    "modelName": "Countach",
+    "BrandId": 7
+  },
+  {
+    "modelName": "Continental",
+    "BrandId": 8
+  },
+  {
+    "modelName": "Continental Mark VII",
+    "BrandId": 8
+  },
+  {
+    "modelName": "Mark VII",
+    "BrandId": 8
+  },
+  {
+    "modelName": "Town Car",
+    "BrandId": 8
+  },
+  {
+    "modelName": "Esprit",
+    "BrandId": 9
+  },
+  {
+    "modelName": "Esprit Turbo",
+    "BrandId": 9
+  },
+  {
+    "modelName": "Biturbo",
+    "BrandId": 10
+  },
+  {
+    "modelName": "Quattroporte",
+    "BrandId": 10
+  },
+  {
+    "modelName": "626",
+    "BrandId": 11
+  },
+  {
+    "modelName": "B2000",
+    "BrandId": 11
+  },
+  {
+    "modelName": "Familia",
+    "BrandId": 11
+  },
+  {
+    "modelName": "GLC",
+    "BrandId": 11
+  },
+  {
+    "modelName": "RX-7",
+    "BrandId": 11
+  },
+  {
+    "modelName": "E-Class",
+    "BrandId": 12
+  },
+  {
+    "modelName": "S-Class",
+    "BrandId": 12
+  },
+  {
+    "modelName": "SL-Class",
+    "BrandId": 12
+  },
+  {
+    "modelName": "W126",
+    "BrandId": 12
+  },
+  {
+    "modelName": "W201",
+    "BrandId": 12
+  },
+  {
+    "modelName": "Capri",
+    "BrandId": 13
+  },
+  {
+    "modelName": "Cougar",
+    "BrandId": 13
+  },
+  {
+    "modelName": "Grand Marquis",
+    "BrandId": 13
+  },
+  {
+    "modelName": "Lynx",
+    "BrandId": 13
+  },
+  {
+    "modelName": "Marquis",
+    "BrandId": 13
+  },
+  {
+    "modelName": "Topaz",
+    "BrandId": 13
+  },
+  {
+    "modelName": "XR4Ti",
+    "BrandId": 14
+  },
+  {
+    "modelName": "Chariot",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Cordia",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Galant",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Mirage",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Pajero",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Space",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Starion",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Tredia",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Truck",
+    "BrandId": 15
+  },
+  {
+    "modelName": "Reliant",
+    "BrandId": 16
+  },
+  {
+    "modelName": "Voyager",
+    "BrandId": 16
+  },
+  {
+    "modelName": "1000",
+    "BrandId": 17
+  },
+  {
+    "modelName": "6000",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Bonneville",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Fiero",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Firebird",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Firefly",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Grand Am",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Grand Prix",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Parisienne",
+    "BrandId": 17
+  },
+  {
+    "modelName": "Sunbird",
+    "BrandId": 17
+  },
+  {
+    "modelName": "911",
+    "BrandId": 18
+  },
+  {
+    "modelName": "928",
+    "BrandId": 18
+  },
+  {
+    "modelName": "944",
+    "BrandId": 18
+  },
+  {
+    "modelName": "Alliance",
+    "BrandId": 19
+  },
+  {
+    "modelName": "900",
+    "BrandId": 20
+  },
+  {
+    "modelName": "BRAT",
+    "BrandId": 21
+  },
+  {
+    "modelName": "Brat",
+    "BrandId": 21
+  },
+  {
+    "modelName": "Leone",
+    "BrandId": 21
+  },
+  {
+    "modelName": "XT",
+    "BrandId": 21
+  },
+  {
+    "modelName": "Cultus",
+    "BrandId": 22
+  },
+  {
+    "modelName": "SJ",
+    "BrandId": 22
+  },
+  {
+    "modelName": "SJ 410",
+    "BrandId": 22
+  },
+  {
+    "modelName": "Celica",
+    "BrandId": 23
+  },
+  {
+    "modelName": "MR2",
+    "BrandId": 23
+  },
+  {
+    "modelName": "Cabriolet",
+    "BrandId": 24
+  },
+  {
+    "modelName": "GTI",
+    "BrandId": 24
+  },
+  {
+    "modelName": "Golf",
+    "BrandId": 24
+  },
+  {
+    "modelName": "Jetta",
+    "BrandId": 24
+  },
+  {
+    "modelName": "Passat",
+    "BrandId": 24
+  },
+  {
+    "modelName": "Quantum",
+    "BrandId": 24
+  },
+  {
+    "modelName": "Scirocco",
+    "BrandId": 24
+  },
+  {
+    "modelName": "Type 2",
+    "BrandId": 24
+  },
+  {
+    "modelName": "Vanagon",
+    "BrandId": 24
+  }
+]

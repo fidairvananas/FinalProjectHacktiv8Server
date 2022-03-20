@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       kacaSamping: DataTypes.BOOLEAN,
       kacaBelakang: DataTypes.BOOLEAN,
       tire: DataTypes.BOOLEAN,
+      inspectedBy: DataTypes.STRING,
       InspectionId: {
         type: DataTypes.INTEGER,
         allowNull: false,
