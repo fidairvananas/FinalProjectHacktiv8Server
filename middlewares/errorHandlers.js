@@ -24,6 +24,9 @@ const errorHandler = (err, req, res, next) => {
     case "MidtransError":
       res.status(+err.ApiResponse.status_code).json({ message: err.ApiResponse.status_message });
       break;
+    case "FORBIDDEN":
+      res.status(err.code).json({ message: err.message });
+      break;
     default:
       console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
