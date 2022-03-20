@@ -15,7 +15,8 @@ const { format } = require("date-fns");
 const payment = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
-    const { quantity, carId, buyerId, notes } = req.body;
+    const { quantity, carId, notes } = req.body;
+    const buyerId = req.loginBuyer.id;
 
     if (!quantity) {
       throw {
@@ -92,7 +93,10 @@ const payment = async (req, res, next) => {
       orderId = "OTOSIC-" + num + "-" + new Date().getTime();
     }
 
-    const date = format(new Date(add(new Date(), {days: 1})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
+    const date = format(
+      new Date(add(new Date(), { days: 1 })),
+      "yyyy-MM-dd hh:mm:ss " + "+0700"
+    );
 
     let parameter = {
       transaction_details: {
@@ -327,7 +331,8 @@ const firstInstallment = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
     const { id: CarId } = req.params;
-    const { token_id, term, dp, buyerId } = req.body;
+    const { token_id, term, dp } = req.body;
+    const buyerId = req.loginBuyer.id;
 
     const car = await Car.findByPk(+CarId);
 
@@ -377,7 +382,10 @@ const firstInstallment = async (req, res, next) => {
 
     const installment = Math.ceil(borrow / term + borrow * 0.01);
 
-    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
+    const date = format(
+      new Date(add(new Date(), { days: 30 })),
+      "yyyy-MM-dd hh:mm:ss " + "+0700"
+    );
 
     let parameter = {
       name,
@@ -534,8 +542,11 @@ const nextInstallment = async (req, res, next) => {
     }
 
     const resp = await core.getSubscription(car.subscriptionId);
-    
-    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss')
+
+    const date = format(
+      new Date(add(new Date(), { days: 30 })),
+      "yyyy-MM-dd hh:mm:ss"
+    );
 
     let updateSubscriptionParam = {
       name,
