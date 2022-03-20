@@ -12,6 +12,9 @@ const errorHandler = (err, req, res, next) => {
     case "UNAUTHORIZED":
       res.status(err.code).json({ message: err.message });
       break;
+    case "FORBIDDEN":
+      res.status(err.code).json({ message: err.message });
+      break;
     case "INVALID_TOKEN":
       res.status(err.code).json({ message: err.message });
       break;
@@ -22,7 +25,9 @@ const errorHandler = (err, req, res, next) => {
       res.status(err.code).json({ message: err.message });
       break;
     case "MidtransError":
-      res.status(+err.ApiResponse.status_code).json({ message: err.ApiResponse.status_message });
+      res
+        .status(+err.ApiResponse.status_code)
+        .json({ message: err.ApiResponse.status_message });
       break;
     case "FORBIDDEN":
       res.status(err.code).json({ message: err.message });

@@ -154,7 +154,7 @@ module.exports = (sequelize, DataTypes) => {
       subscriptionId: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'none',
+        defaultValue: "none",
         validate: {
           notNull: {
             msg: "Subscription Id is required",
@@ -164,7 +164,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-
     },
     {
       sequelize,
