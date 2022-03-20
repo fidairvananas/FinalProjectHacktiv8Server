@@ -618,6 +618,7 @@ _Response (200 - OK)_
     "interiorInspection": false,
     "roadTest": false,
     "kolongTest": false,
+    "inspectedBy": "Admin",
     "CarId": 1,
     "createdAt": "2022-03-19T07:49:29.689Z",
     "updatedAt": "2022-03-19T07:49:29.689Z",
@@ -711,6 +712,7 @@ _Response (200 - OK)_
   "interiorInspection": false,
   "roadTest": false,
   "kolongTest": false,
+  "inspectedBy": "Admin",
   "CarId": 1,
   "createdAt": "2022-03-19T07:49:29.689Z",
   "updatedAt": "2022-03-19T07:49:29.689Z",
@@ -1122,6 +1124,7 @@ _Response (200 - OK)_
   "kacaSamping": true,
   "kacaBelakang": true,
   "tire": true,
+  "inspectedBy": "Admin",
   "InspectionId": 1,
   "createdAt": "2022-03-19T07:49:29.697Z",
   "updatedAt": "2022-03-19T09:42:28.184Z"
@@ -1224,6 +1227,7 @@ _Response (200 - OK)_
   "seats": true,
   "gasPedal": true,
   "brakePedal": true,
+  "inspectedBy": "Admin",
   "InspectionId": 1,
   "createdAt": "2022-03-19T07:49:29.693Z",
   "updatedAt": "2022-03-19T09:47:47.860Z"
@@ -1330,6 +1334,7 @@ _Response (200 - OK)_
   "kestabilanBan": true,
   "shockBreaker": true,
   "masterBrake": true,
+  "inspectedBy": "Admin",
   "InspectionId": 3,
   "createdAt": "2022-03-19T07:58:45.311Z",
   "updatedAt": "2022-03-19T09:54:34.007Z"
@@ -1428,6 +1433,7 @@ _Response (200 - OK)_
   "acceleration": true,
   "engineSound": true,
   "brake": true,
+  "inspectedBy": "Admin",
   "InspectionId": 3,
   "createdAt": "2022-03-19T07:58:45.306Z",
   "updatedAt": "2022-03-19T09:59:52.564Z"
