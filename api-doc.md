@@ -347,29 +347,29 @@ _Response (200 - OK)_
 {
   "id": 1,
   "name": "Ford Model T Touring- 1918",
-  "description": "Used Ford Model T car",
+  "description": "Used Ford Model T Touring car",
   "fuel": "Gasoline",
   "seats": 2,
   "mileage": 70000,
   "price": 100000000,
-  "color": "black",
+  "color": "Black",
   "yearMade": "1918-04-23T00:00:00.000Z",
   "passedInspection": false,
   "DealerId": 1,
-  "TypeId": 1,
-  "createdAt": "2022-03-19T07:49:29.675Z",
-  "updatedAt": "2022-03-19T07:49:29.675Z",
+  "TypeId": 33,
+  "createdAt": "2022-03-20T05:13:51.256Z",
+  "updatedAt": "2022-03-20T05:13:51.256Z",
   "Type": {
-    "id": 1,
+    "id": 33,
     "modelName": "Model T",
     "BrandId": 5,
-    "createdAt": "2022-03-19T06:20:28.481Z",
-    "updatedAt": "2022-03-19T06:20:28.481Z",
+    "createdAt": "2022-03-20T05:12:02.110Z",
+    "updatedAt": "2022-03-20T05:12:02.110Z",
     "Brand": {
       "id": 5,
       "name": "Ford",
-      "createdAt": "2022-03-19T06:20:28.473Z",
-      "updatedAt": "2022-03-19T06:20:28.473Z"
+      "createdAt": "2022-03-20T05:12:02.102Z",
+      "updatedAt": "2022-03-20T05:12:02.102Z"
     }
   },
   "Dealer": {
@@ -385,17 +385,29 @@ _Response (200 - OK)_
       "id": 1,
       "image": "https://www.lanemotormuseum.org/media/zoo/images/ford_modelT_1918web1a_9071f8b80d69dd143f5a7e9057f0a772.jpg",
       "CarId": 1,
-      "createdAt": "2022-03-19T07:49:29.684Z",
-      "updatedAt": "2022-03-19T07:49:29.684Z"
+      "createdAt": "2022-03-20T05:13:51.260Z",
+      "updatedAt": "2022-03-20T05:13:51.260Z"
     },
     {
       "id": 2,
       "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/1918_Ford_Model_T_Touring_2.9.jpg",
       "CarId": 1,
-      "createdAt": "2022-03-19T07:49:29.684Z",
-      "updatedAt": "2022-03-19T07:49:29.684Z"
+      "createdAt": "2022-03-20T05:13:51.260Z",
+      "updatedAt": "2022-03-20T05:13:51.260Z"
     }
-  ]
+  ],
+  "Inspection": {
+    "id": 1,
+    "mainInspection": false,
+    "exteriorInspection": false,
+    "interiorInspection": false,
+    "roadTest": false,
+    "kolongTest": false,
+    "inspectedBy": null,
+    "CarId": 1,
+    "createdAt": "2022-03-20T05:13:51.265Z",
+    "updatedAt": "2022-03-20T05:13:51.265Z"
+  }
 }
 ```
 

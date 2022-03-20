@@ -151,6 +151,7 @@ const getCar = async (req, res, next) => {
           ],
         },
         { model: Image },
+        { model: Inspection },
       ],
     });
 
