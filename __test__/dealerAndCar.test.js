@@ -320,9 +320,6 @@ describe("Car routes", () => {
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Array);
-          expect(res.body[0]).toHaveProperty("id", expect.any(Number));
-          expect(res.body[0]).toHaveProperty("Type", expect.any(Object));
-          expect(res.body[0]).toHaveProperty("Dealer", expect.any(Object));
           done();
         })
         .catch((err) => {
