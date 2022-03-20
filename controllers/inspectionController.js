@@ -56,6 +56,7 @@ const changeMainInspection = async (req, res, next) => {
   try {
     const { mainInspection } = req.body;
     const inspectionId = req.params.id;
+    const { name } = req.loginAdmin;
 
     const inspection = await Inspection.findByPk(inspectionId);
     if (!inspection) {
@@ -67,7 +68,7 @@ const changeMainInspection = async (req, res, next) => {
     }
 
     await Inspection.update(
-      { mainInspection },
+      { mainInspection: mainInspection, inspectedBy: name },
       { where: { id: inspectionId } }
     );
 
@@ -82,6 +83,8 @@ const changeExterior = async (req, res, next) => {
     const { exteriorInspection } = req.body;
     const inspectionId = req.params.id;
     const inspection = await Inspection.findByPk(inspectionId);
+    const { name } = req.loginAdmin;
+
     if (!inspection) {
       throw {
         code: 404,
@@ -91,7 +94,7 @@ const changeExterior = async (req, res, next) => {
     }
 
     await Inspection.update(
-      { exteriorInspection },
+      { exteriorInspection, inspectedBy: name },
       { where: { id: inspectionId } }
     );
 
@@ -106,6 +109,8 @@ const changeInterior = async (req, res, next) => {
     const { interiorInspection } = req.body;
     const inspectionId = req.params.id;
     const inspection = await Inspection.findByPk(inspectionId);
+    const { name } = req.loginAdmin;
+
     if (!inspection) {
       throw {
         code: 404,
@@ -114,7 +119,7 @@ const changeInterior = async (req, res, next) => {
       };
     }
     await Inspection.update(
-      { interiorInspection },
+      { interiorInspection, inspectedBy: name },
       { where: { id: inspectionId } }
     );
 
@@ -129,6 +134,8 @@ const changeRoadTest = async (req, res, next) => {
     const { roadTest } = req.body;
     const inspectionId = req.params.id;
     const inspection = await Inspection.findByPk(inspectionId);
+    const { name } = req.loginAdmin;
+
     if (!inspection) {
       throw {
         code: 404,
@@ -137,7 +144,10 @@ const changeRoadTest = async (req, res, next) => {
       };
     }
 
-    await Inspection.update({ roadTest }, { where: { id: inspectionId } });
+    await Inspection.update(
+      { roadTest, inspectedBy: name },
+      { where: { id: inspectionId } }
+    );
 
     res.status(200).json({ message: "Road test inspection updated" });
   } catch (err) {
@@ -150,6 +160,8 @@ const changeKolong = async (req, res, next) => {
     const { kolongTest } = req.body;
     const inspectionId = req.params.id;
     const inspection = await Inspection.findByPk(inspectionId);
+    const { name } = req.loginAdmin;
+
     if (!inspection) {
       throw {
         code: 404,
@@ -158,7 +170,10 @@ const changeKolong = async (req, res, next) => {
       };
     }
 
-    await Inspection.update({ kolongTest }, { where: { id: inspectionId } });
+    await Inspection.update(
+      { kolongTest, inspectedBy: name },
+      { where: { id: inspectionId } }
+    );
 
     res.status(200).json({ message: "Kolong inspection updated" });
   } catch (err) {

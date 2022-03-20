@@ -32,6 +32,7 @@ const changeInteriorInspection = async (req, res, next) => {
       brakePedal,
     } = req.body;
     const interiorId = req.params.id;
+    const { name } = req.loginAdmin;
 
     const interior = await Interior.findByPk(interiorId);
 
@@ -53,6 +54,7 @@ const changeInteriorInspection = async (req, res, next) => {
         seats,
         gasPedal,
         brakePedal,
+        inspectedBy: name,
       },
       {
         where: {

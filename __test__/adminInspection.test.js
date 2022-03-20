@@ -43,6 +43,7 @@ beforeAll((done) => {
     roadTest: false,
     kolongTest: false,
     CarId: 2,
+    inspectedBy: "Admin",
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -347,7 +348,7 @@ describe("Inspection test", () => {
         .send({ passedInspection: true })
         .set(
           "access_token",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJtd29ya2VyMjZAZ21haWwuY29tIiwic3RvcmVOYW1lIjoiSnViZWwgQ2xhc3NpYyIsInBob25lTnVtYmVyIjoiMDgxMzExMTA3OTU0Iiwic3RvcmVBZGRyZXNzIjoiTWVkYW4gaGVsdmV0aWEiLCJpYXQiOjE2NDc1NzA1ODl9.kouAbBpeUN1dIvjsNtfKbv482h7zsF-qsfYT2tLbPO8"
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJqdWJlbHNpbmFnYTEzQGdtYWlsLmNvbSIsInN0b3JlTmFtZSI6Ikp1YmVsIENsYXNzaWMiLCJwaG9uZU51bWJlciI6IjA4MTMxMTEwNzk1NCIsInN0b3JlQWRkcmVzcyI6Ik1lZGFuIGhlbHZldGlhIiwiaWF0IjoxNjQ3NzQ0MjM0fQ.z5ug_zyNO_MKZxiuChN8cGst6KweYvI9Phv6yIwaZXc"
         )
         .then((res) => {
           expect(res.status).toBe(401);
@@ -458,7 +459,7 @@ describe("Inspection test", () => {
         .send({ mainInspection: true })
         .set(
           "access_token",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJtd29ya2VyMjZAZ21haWwuY29tIiwic3RvcmVOYW1lIjoiSnViZWwgQ2xhc3NpYyIsInBob25lTnVtYmVyIjoiMDgxMzExMTA3OTU0Iiwic3RvcmVBZGRyZXNzIjoiTWVkYW4gaGVsdmV0aWEiLCJpYXQiOjE2NDc1NzA1ODl9.kouAbBpeUN1dIvjsNtfKbv482h7zsF-qsfYT2tLbPO8"
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJqdWJlbHNpbmFnYTEzQGdtYWlsLmNvbSIsInN0b3JlTmFtZSI6Ikp1YmVsIENsYXNzaWMiLCJwaG9uZU51bWJlciI6IjA4MTMxMTEwNzk1NCIsInN0b3JlQWRkcmVzcyI6Ik1lZGFuIGhlbHZldGlhIiwiaWF0IjoxNjQ3NzQ0MjM0fQ.z5ug_zyNO_MKZxiuChN8cGst6KweYvI9Phv6yIwaZXc"
         )
         .then((res) => {
           expect(res.status).toBe(401);

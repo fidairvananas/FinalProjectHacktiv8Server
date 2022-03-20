@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       interiorInspection: DataTypes.BOOLEAN,
       roadTest: DataTypes.BOOLEAN,
       kolongTest: DataTypes.BOOLEAN,
+      inspectedBy: DataTypes.STRING,
       CarId: {
         type: DataTypes.INTEGER,
         allowNull: false,
