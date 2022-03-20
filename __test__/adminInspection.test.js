@@ -572,7 +572,7 @@ describe("Interior routes", () => {
   describe("PATCH /inspections/interior-detail -- success test", () => {
     it("should return correct response (200) admin update inspection status", (done) => {
       request(app)
-        .patch("/inspections/interior-detail/3")
+        .patch("/inspections/interior-detail/1")
         .set("access_token", access_token)
         .send({ speedometer: true, klakson: true, steeringWheel: true })
         .then((res) => {
@@ -589,7 +589,7 @@ describe("Interior routes", () => {
   describe("GET /inspections/interior-detail -- success test", () => {
     it("should return correct response (200) when request for interior inspection by id complete", (done) => {
       request(app)
-        .get("/inspections/interior-detail/3")
+        .get("/inspections/interior-detail/1")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -658,7 +658,7 @@ describe("Exterior routes", () => {
   describe("PATCH /inspections/exterior-detail/:id -- success test", () => {
     it("should return correct response (200) when admin update inspection status", (done) => {
       request(app)
-        .patch("/inspections/exterior-detail/10")
+        .patch("/inspections/exterior-detail/1")
         .set("access_token", access_token)
         .send({ speedometer: true, klakson: true, steeringWheel: true })
         .then((res) => {
@@ -675,7 +675,7 @@ describe("Exterior routes", () => {
   describe("GET /inspections/exterior-detail/:id -- success test", () => {
     it("should return correct response (200) when searching for exterior inspection by id", (done) => {
       request(app)
-        .get("/inspections/exterior-detail/10")
+        .get("/inspections/exterior-detail/1")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -749,7 +749,7 @@ describe("Kolong test routes", () => {
   describe("PATCH /inspections/kolong-detail -- success test", () => {
     it("should return correct response (200) when admin update inspection status", (done) => {
       request(app)
-        .patch("/inspections/kolong-detail/10")
+        .patch("/inspections/kolong-detail/1")
         .set("access_token", access_token)
         .send({ oliMesin: true, aki: true, knalpot: true })
         .then((res) => {
@@ -766,7 +766,7 @@ describe("Kolong test routes", () => {
   describe("GET /inspections/kolong-detail/:id -- success test", () => {
     it("should return correct response (200) when searching for kolong inspection by id", (done) => {
       request(app)
-        .get("/inspections/kolong-detail/10")
+        .get("/inspections/kolong-detail/1")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
@@ -835,7 +835,7 @@ describe("Road test routes", () => {
   describe("PATCH /inspections/roadtest-detail -- success test", () => {
     it("should return correct response (200) when admin update inspection status", (done) => {
       request(app)
-        .patch("/inspections/roadtest-detail/3")
+        .patch("/inspections/roadtest-detail/1")
         .set("access_token", access_token)
         .send({ brake: true, engineStarting: true, engineSound: true })
         .then((res) => {
@@ -852,7 +852,7 @@ describe("Road test routes", () => {
   describe("GET /inspections/roadtest-detail/:id -- success test", () => {
     it("should return correct response (200) when searching for roadtest inspection by id", (done) => {
       request(app)
-        .get("/inspections/roadtest-detail/3")
+        .get("/inspections/roadtest-detail/1")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);

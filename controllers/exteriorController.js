@@ -2,9 +2,13 @@ const { Exterior } = require("../models");
 
 const getExterior = async (req, res, next) => {
   try {
-    const exteriorId = req.params.id;
+    const inspectionId = req.params.id;
 
-    const exterior = await Exterior.findByPk(exteriorId);
+    const exterior = await Exterior.findOne({
+      where: {
+        InspectionId: inspectionId,
+      },
+    });
 
     if (!exterior) {
       throw {
@@ -33,10 +37,15 @@ const changeExteriorInspection = async (req, res, next) => {
       kacaBelakang,
       tire,
     } = req.body;
-    const exteriorId = req.params.id;
     const { name } = req.loginAdmin;
 
-    const exterior = await Exterior.findByPk(exteriorId);
+    const inspectionId = req.params.id;
+
+    const exterior = await Exterior.findOne({
+      where: {
+        InspectionId: inspectionId,
+      },
+    });
 
     if (!exterior) {
       throw {
@@ -61,7 +70,7 @@ const changeExteriorInspection = async (req, res, next) => {
       },
       {
         where: {
-          id: exteriorId,
+          InspectionId: inspectionId,
         },
       }
     );

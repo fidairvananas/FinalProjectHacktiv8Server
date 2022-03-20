@@ -2,9 +2,13 @@ const { Kolong } = require("../models");
 
 const getKolong = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const inspectionId = req.params.id;
 
-    const kolong = await Kolong.findByPk(id);
+    const kolong = await Kolong.findOne({
+      where: {
+        InspectionId: inspectionId,
+      },
+    });
     if (!kolong) {
       throw {
         code: 404,
@@ -21,7 +25,6 @@ const getKolong = async (req, res, next) => {
 
 const changeKolongInsp = async (req, res, next) => {
   try {
-    const id = req.params.id;
     const {
       oliMesin,
       transmission,
@@ -37,7 +40,14 @@ const changeKolongInsp = async (req, res, next) => {
 
     const { name } = req.loginAdmin;
 
-    const kolong = await Kolong.findByPk(id);
+    const inspectionId = req.params.id;
+
+    const kolong = await Kolong.findOne({
+      where: {
+        InspectionId: inspectionId,
+      },
+    });
+
     if (!kolong) {
       throw {
         code: 404,
@@ -60,7 +70,11 @@ const changeKolongInsp = async (req, res, next) => {
         masterBrake,
         inspectedBy: name,
       },
-      { where: { id } }
+      {
+        where: {
+          InspectionId: inspectionId,
+        },
+      }
     );
 
     res.status(200).json({ message: "Kolong inspection updated" });

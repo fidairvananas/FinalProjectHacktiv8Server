@@ -2,8 +2,10 @@ const { Interior } = require("../models");
 
 const getInterior = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const interior = await Interior.findByPk(id);
+    const inspectionId = req.params.id;
+    const interior = await Interior.findOne({
+      where: { InspectionId: inspectionId },
+    });
 
     if (!interior) {
       throw {
@@ -31,10 +33,12 @@ const changeInteriorInspection = async (req, res, next) => {
       gasPedal,
       brakePedal,
     } = req.body;
-    const interiorId = req.params.id;
     const { name } = req.loginAdmin;
 
-    const interior = await Interior.findByPk(interiorId);
+    const inspectionId = req.params.id;
+    const interior = await Interior.findOne({
+      where: { InspectionId: inspectionId },
+    });
 
     if (!interior) {
       throw {
@@ -57,9 +61,7 @@ const changeInteriorInspection = async (req, res, next) => {
         inspectedBy: name,
       },
       {
-        where: {
-          id: interiorId,
-        },
+        where: { InspectionId: inspectionId },
       }
     );
 

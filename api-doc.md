@@ -11,7 +11,7 @@ List of available endpoints:
 - `GET /cars`
 - `POST /cars`
 - `GET /cars/:id`
-- `GET /cars/page=2`
+- `GET /cars?page=2`
 - `DELETE /cars/:id`
 - `PUT /cars/:id`
 - `PATCH /cars/:id`
@@ -31,9 +31,9 @@ List of available endpoints:
 - `PATCH /inspections/roadtest-detail/:id`
 - `GET /inspections/roadtest-detail/:id`
 - `GET /brands`
-- `GET /brands/brand=Audi`
+- `GET /brands?brand=Audi`
 - `GET /types`
-- `GET /types/type=mustang`
+- `GET /types?type=mustang`
 
 &nbsp;
 
@@ -1013,7 +1013,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Change car part inspection on exterior table
+- Change car part inspection on exterior table by inspection id
 
 Request:
 
@@ -1071,7 +1071,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Get exterior detail inspection data by id
+- Get exterior detail inspection data by inspection id
 
 Request:
 
@@ -1118,7 +1118,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Change car part inspection on interior table
+- Change car part inspection on interior table by inspection id
 
 Request:
 
@@ -1175,7 +1175,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Get interior detail inspection data by id
+- Get interior detail inspection data by by inspection id
 
 Request:
 
@@ -1221,7 +1221,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Change car part inspection on kolong table
+- Change car part inspection on kolong table by inspection id
 
 Request:
 
@@ -1280,7 +1280,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Get kolong detail inspection data by id
+- Get kolong detail inspection data by inspection id
 
 Request:
 
@@ -1328,7 +1328,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Change car part inspection on roadtest table
+- Change car part inspection on roadtest table by inspection id
 
 Request:
 
@@ -1383,7 +1383,7 @@ _Response (404 - Not Found)_
 
 Description:
 
-- Get roadtest detail inspection data by id
+- Get roadtest detail inspection data by inspection id
 
 Request:
 

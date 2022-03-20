@@ -2,9 +2,11 @@ const { RoadTest } = require("../models");
 
 const getRoadTest = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const inspectionId = req.params.id;
 
-    const roadTest = await RoadTest.findByPk(id);
+    const roadTest = await RoadTest.findOne({
+      where: { InspectionId: inspectionId },
+    });
 
     if (!roadTest) {
       throw {
@@ -22,7 +24,6 @@ const getRoadTest = async (req, res, next) => {
 
 const changeRoadTestInsp = async (req, res, next) => {
   try {
-    const id = req.params.id;
     const { name } = req.loginAdmin;
 
     const {
@@ -34,7 +35,11 @@ const changeRoadTestInsp = async (req, res, next) => {
       brake,
     } = req.body;
 
-    const roadTest = await RoadTest.findByPk(id);
+    const inspectionId = req.params.id;
+
+    const roadTest = await RoadTest.findOne({
+      where: { InspectionId: inspectionId },
+    });
 
     if (!roadTest) {
       throw {
@@ -55,9 +60,7 @@ const changeRoadTestInsp = async (req, res, next) => {
         inspectedBy: name,
       },
       {
-        where: {
-          id,
-        },
+        where: { InspectionId: inspectionId },
       }
     );
 
