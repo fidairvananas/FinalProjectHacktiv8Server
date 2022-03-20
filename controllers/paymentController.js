@@ -20,8 +20,24 @@ const payment = async (req, res, next) => {
     if (!quantity) {
       throw {
         code: 400,
-        name: "SequelizeValidationError",
+        name: "BAD_REQUEST",
         message: "Quantity can't be empty.",
+      };
+    }
+
+    if (!carId) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Car ID can't be empty.",
+      };
+    }
+
+    if (!buyerId) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Buyer ID can't be empty.",
       };
     }
 
@@ -62,8 +78,8 @@ const payment = async (req, res, next) => {
 
     if (car.status == "pending") {
       throw {
-        code: 400,
-        name: "UNAUTHORIZED",
+        code: 403,
+        name: "FORBIDDEN",
         message: "Car status pending payment for other transaction.",
       };
     }
