@@ -11,6 +11,7 @@ List of available endpoints:
 - `GET /cars`
 - `POST /cars`
 - `GET /cars/:id`
+- `GET /cars/page=2`
 - `DELETE /cars/:id`
 - `PUT /cars/:id`
 - `PATCH /cars/:id`
@@ -30,7 +31,9 @@ List of available endpoints:
 - `PATCH /inspections/roadtest-detail/:id`
 - `GET /inspections/roadtest-detail/:id`
 - `GET /brands`
+- `GET /brands/brand=Audi`
 - `GET /types`
+- `GET /types/type=mustang`
 
 &nbsp;
 
@@ -208,95 +211,53 @@ Description:
 
 - Get list of all cars
 
+Request:
+
+- query:
+
+```json
+{
+  "type": "String",
+  "page": "integer"
+}
+```
+
 _Response (200 - OK)_
 
 ```json
 [
-  {
-    "id": 1,
-    "name": "Ford Model T Touring- 1918",
-    "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
-    "fuel": "Gasoline",
-    "seats": 2,
-    "mileage": 70000,
-    "price": 100000000,
-    "color": "black",
-    "yearMade": "1918-04-23T00:00:00.000Z",
-    "passedInspection": false,
-    "DealerId": 1,
-    "TypeId": 1,
-    "createdAt": "2022-03-19T07:49:29.675Z",
-    "updatedAt": "2022-03-19T07:49:29.675Z",
-    "Type": {
-      "modelName": "Model T",
-      "Brand": {
-        "name": "Ford"
-      }
-    },
-    "Dealer": {
-      "id": 1,
-      "name": "Jubel",
-      "email": "jubelsinaga13@gmail.com",
-      "phoneNumber": "081311107954",
-      "storeName": "Jubel Classic",
-      "storeAddress": "Medan helvetia"
-    },
-    "Images": [
-      {
-        "id": 1,
-        "image": "https://www.lanemotormuseum.org/media/zoo/images/ford_modelT_1918web1a_9071f8b80d69dd143f5a7e9057f0a772.jpg",
-        "CarId": 1,
-        "createdAt": "2022-03-19T07:49:29.684Z",
-        "updatedAt": "2022-03-19T07:49:29.684Z"
-      },
-      {
-        "id": 2,
-        "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/1918_Ford_Model_T_Touring_2.9.jpg",
-        "CarId": 1,
-        "createdAt": "2022-03-19T07:49:29.684Z",
-        "updatedAt": "2022-03-19T07:49:29.684Z"
-      }
-    ]
-  },
-  {
-    "id": 5,
-    "name": "Honda Civic 1988",
-    "description": "The fourth generation Honda Civic is an automobile produced by Honda from 1987 until 1991 with the wagon continuing in production in some markets until 1996. The suspension had a new double wishbone suspension in the front and an independent suspension in the rear, the wheelbase was increased to 98.4 inches (250 cm), and the body was redesigned with a lower hood line and more glass, giving less drag. The redesigned Civic was introduced in 1987 for the 1988 model year. The fourth generation Civic would be available in three variants; 3-door hatchback, 4-door sedan and 5-door wagon with various trim levels offered in each variant.",
-    "fuel": "Gasoline",
-    "seats": 4,
-    "mileage": 150000,
-    "price": 75000000,
-    "color": "silver",
-    "yearMade": "1988-04-23T00:00:00.000Z",
-    "passedInspection": false,
-    "DealerId": 1,
-    "TypeId": 6,
-    "createdAt": "2022-03-19T07:58:45.279Z",
-    "updatedAt": "2022-03-19T07:58:45.279Z",
-    "Type": {
-      "modelName": "Civic",
-      "Brand": {
-        "name": "Honda"
-      }
-    },
-    "Dealer": {
-      "id": 1,
-      "name": "Jubel",
-      "email": "jubelsinaga13@gmail.com",
-      "phoneNumber": "081311107954",
-      "storeName": "Jubel Classic",
-      "storeAddress": "Medan helvetia"
-    },
-    "Images": [
-      {
+    {
         "id": 3,
-        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9f/1989_Honda_Civic_GL_sedan_%28front%29.jpg",
-        "CarId": 5,
-        "createdAt": "2022-03-19T07:58:45.284Z",
-        "updatedAt": "2022-03-19T07:58:45.284Z"
-      }
-    ]
-  }
+        "name": "1998 Ford Mustang GT",
+        "description": "Used Ford mustang GT year 1998",
+        "fuel": "Gasoline",
+        "seats": 4,
+        "mileage": 70000,
+        "price": 200000000,
+        "color": "White",
+        "yearMade": "1998-04-23T00:00:00.000Z",
+        "passedInspection": false,
+        "DealerId": 1,
+        "TypeId": 34,
+        "createdAt": "2022-03-20T05:14:42.424Z",
+        "updatedAt": "2022-03-20T05:14:42.424Z"
+    },
+    {
+        "id": 4,
+        "name": "1995 Camaro convertible",
+        "description": "Used Chevrolet Camaro year 1995",
+        "fuel": "Gasoline",
+        "seats": 2,
+        "mileage": 85000,
+        "price": 150000000,
+        "color": "Silver-stripe-black",
+        "yearMade": "1995-04-23T00:00:00.000Z",
+        "passedInspection": false,
+        "DealerId": 1,
+        "TypeId": 13,
+        "createdAt": "2022-03-20T05:14:58.639Z",
+        "updatedAt": "2022-03-20T05:14:58.639Z"
+    }
   ...
 ]
 ```
@@ -324,7 +285,7 @@ Request:
 ```json
 {
   "name": "Ford Model T Touring- 1918",
-  "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
+  "description": "Used Ford Model T car",
   "fuel": "Gasoline",
   "seats": 2,
   "mileage": 70000,
@@ -386,7 +347,7 @@ _Response (200 - OK)_
 {
   "id": 1,
   "name": "Ford Model T Touring- 1918",
-  "description": "When Henry Ford introduced his new low-priced Model T in 1908, he could not have conceived what impact the humble “T” would have on the world. Before the Model T, most people had not traveled outside their hometown. By making cars available to the masses, this newfound mobility would soon alter American’s living patterns, their landscape, their leisure time, and even their air. ",
+  "description": "Used Ford Model T car",
   "fuel": "Gasoline",
   "seats": 2,
   "mileage": 70000,

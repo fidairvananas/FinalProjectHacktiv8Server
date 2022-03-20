@@ -1,9 +1,20 @@
 const { Type, Car, Brand } = require("../models");
+const { Op } = require("sequelize");
 
 const getTypes = async (req, res, next) => {
   try {
+    const { type } = req.query;
+    const query = {};
+    if (type) {
+      query.where = {
+        modelName: {
+          [Op.iLike]: `%${type}%`,
+        },
+      };
+    }
     const types = await Type.findAll({
       include: [{ model: Car }, { model: Brand }],
+      ...query,
     });
     res.status(200).json(types);
   } catch (err) {

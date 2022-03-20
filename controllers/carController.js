@@ -14,32 +14,17 @@ const {
 
 const getCars = async (req, res, next) => {
   try {
-    const cars = await Car.findAll({
-      include: [
-        {
-          model: Type,
-          attributes: ["modelName"],
-          include: {
-            model: Brand,
-            attributes: ["name"],
-          },
-        },
-        {
-          model: Dealer,
-          attributes: [
-            "id",
-            "name",
-            "email",
-            "phoneNumber",
-            "storeName",
-            "storeAddress",
-          ],
-        },
-        { model: Image },
-      ],
-    });
+    const { page } = req.query;
+    const perPage = 10;
+    const query = {};
 
-    res.status(200).json(cars);
+    if (page > 0) {
+      (query.limit = perPage), (query.offset = (page - 1) * 10);
+    }
+
+    const cars = await Car.findAndCountAll(query);
+    console.log(cars.count);
+    res.status(200).json(cars.rows);
   } catch (err) {
     next(err);
   }
