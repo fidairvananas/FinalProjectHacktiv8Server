@@ -1,16 +1,18 @@
-const axios = require("axios");
+const CLIENT_KEY = process.env.CLIENT_KEY;
 const AUTHORIZATION = process.env.AUTHORIZATION;
 
-const urlMovie = "https://app.sandbox.midtrans.com/";
+const midtransClient = require("midtrans-client");
 
-const midtrans = axios.create({
-  baseURL: urlMovie,
-  headers: {
-    Authorization: 'Basic ' + new Buffer(AUTHORIZATION).toString('base64'),
-    Accept: 'application/json',
-    "Content-Type": 'application/json'
-  },
+let snap = new midtransClient.Snap({
+  isProduction: false,
+  serverKey: AUTHORIZATION,
+  clientKey: CLIENT_KEY,
 });
 
-module.exports = midtrans;
+let core = new midtransClient.CoreApi({
+  isProduction: false,
+  serverKey: AUTHORIZATION,
+  clientKey: CLIENT_KEY,
+});
 
+module.exports = { snap, core };

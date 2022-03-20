@@ -143,13 +143,27 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: "Type is required",
+            msg: "Status is required",
           },
           notEmpty: {
-            msg: "Type is required",
+            msg: "Status is required",
           },
         },
       },
+      subscriptionId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'none',
+        validate: {
+          notNull: {
+            msg: "Subscription Id is required",
+          },
+          notEmpty: {
+            msg: "Subscription Id is required",
+          },
+        },
+      },
+
     },
     {
       sequelize,

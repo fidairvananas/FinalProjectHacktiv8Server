@@ -1,15 +1,25 @@
-const midtrans = require("../API/MidtransAPI");
-const { BoughtHistory, Buyer, Car, Dealer, Type, Brand, sequelize } = require("../models");
+const { snap, core } = require("../API/MidtransAPI");
+const {
+  BoughtHistory,
+  Buyer,
+  Car,
+  Dealer,
+  Type,
+  Brand,
+  sequelize,
+} = require("../models");
+const CLIENT_KEY = process.env.CLIENT_KEY;
 
+//! CASH PAYMENT
 const payment = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
-    const { quantity, carId, buyerId, notes, installment} = req.body;
+    const { quantity, carId, buyerId, notes, term } = req.body;
 
     if (!quantity) {
       throw {
         code: 400,
-        name: "FORBIDDEN",
+        name: "SequelizeValidationError",
         message: "Quantity can't be empty.",
       };
     }
@@ -32,16 +42,16 @@ const payment = async (req, res, next) => {
         {
           model: Type,
           include: {
-            model: Brand
-          }
+            model: Brand,
+          },
         },
         {
           model: Dealer,
-        }
+        },
       ],
     });
 
-    if (!car || car.status == 'sold') {
+    if (!car || car.status == "sold") {
       throw {
         code: 404,
         name: "NOT_FOUND",
@@ -49,20 +59,39 @@ const payment = async (req, res, next) => {
       };
     }
 
-    const history = await BoughtHistory.findAll()
-    let orderId;
-    
-    if (!history.length) {
-      orderId = 'JMB-' + 1 + '-' + new Date().getTime()
-    } else {
-      let num = history[history.length - 1].id + 1
-      orderId = 'JMB-' + num + '-' + new Date().getTime()
+    if (car.status == "pending") {
+      throw {
+        code: 400,
+        name: "UNAUTHORIZED",
+        message: "Car status pending payment for other transaction.",
+      };
     }
 
-    
-    const date = new Date().toISOString().split('T').join(' ').split('.')[0] + ' +0700'
+    const checkCar = await BoughtHistory.findAll({
+      where: {
+        CarId: carId,
+      },
+    });
 
-    const payload = {
+    if (checkCar) {
+      throw {
+        code: 403,
+        name: "FORBIDDEN",
+        message: "Car already in subcription with term.",
+      };
+    }
+
+    const history = await BoughtHistory.findAll();
+    let orderId;
+
+    if (!history.length) {
+      orderId = "OTOSIC-" + 1 + "-" + new Date().getTime();
+    } else {
+      let num = history[history.length - 1].id + 1;
+      orderId = "OTOSIC-" + num + "-" + new Date().getTime();
+    }
+
+    let parameter = {
       transaction_details: {
         order_id: orderId,
         gross_amount: car.price,
@@ -90,7 +119,6 @@ const payment = async (req, res, next) => {
         },
       },
       enabled_payments: [
-        "credit_card",
         "mandiri_clickpay",
         "cimb_clicks",
         "bca_klikbca",
@@ -107,23 +135,10 @@ const payment = async (req, res, next) => {
         "danamon_online",
         "akulaku",
       ],
-      credit_card: {
-        secure: true,
-        installment: {
-          required: true,
-          terms: {
-            bni: [12, 24, 36, 48, 60],
-            mandiri: [12, 24, 36, 48, 60],
-            cimb: [12, 24, 36, 48, 60],
-            bca: [12, 24, 36, 48, 60],
-            offline: [12, 24, 36, 48, 60],
-          },
-        },
-      },
       schedule: {
         interval: 1,
         interval_unit: "month",
-        max_interval: 60,
+        max_interval: term,
         start_time: new Date(),
       },
       bca_va: {
@@ -151,14 +166,14 @@ const payment = async (req, res, next) => {
         finish: "https://demo.midtrans.com",
       },
       expiry: {
-        start_time: '2022-04-17 19:31:01 +0700',
+        start_time: "2022-04-17 19:31:01 +0700",
         unit: "minutes",
         duration: 1,
       },
       custom_field1: notes ? notes : "",
     };
 
-    const {data} = await midtrans.post("snap/v1/transactions/", payload);
+    let data = await snap.createTransaction(parameter);
 
     if (!data.token) {
       throw {
@@ -170,7 +185,7 @@ const payment = async (req, res, next) => {
 
     await Car.update(
       {
-        status: "sold",
+        status: "pending",
       },
       {
         where: {
@@ -184,15 +199,22 @@ const payment = async (req, res, next) => {
       carName: car.name,
       description: car.description,
       boughtDate: new Date(),
-      paidOff: true,
+      paidOff: false,
       price: car.price,
       BuyerId: buyerId,
       orderId,
-      installment: installment ? true : false,
-      currentInstallment: installment ? 1 : 0
-    })
+      CarId: car.id,
+      installment: false,
+      currentInstallment: 0,
+      totalInstallment: 0,
+    });
 
-    res.status(200).json({ message: "Transastion has been succeed.", paymentUrl: data.redirect_url });
+    res.status(200).json({
+      message: "Please check your payment.",
+      token: data.token,
+      redirect_url: data.redirect_url,
+    });
+
     await t.commit();
   } catch (err) {
     await t.rollback();
@@ -200,4 +222,376 @@ const payment = async (req, res, next) => {
   }
 };
 
-module.exports = { payment };
+//! CHECK STATUS
+const status = async (req, res, next) => {
+  try {
+    const { BuyerId } = req.body;
+
+    const buyer = await Buyer.findByPk(BuyerId)
+
+    if (!buyer) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Buyer not found.",
+      };
+    }
+
+    const history = await BoughtHistory.findAll({
+      where: {
+        BuyerId
+      },
+      order: [['id', 'DESC'],['BuyerId', 'ASC']]
+    })
+
+    if (!history) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Bought history from: " + buyer.name + " not found.",
+      };
+    }
+
+    res.status(200).json(history)
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+//! UPDATE PAYMENT
+const updatePayment = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    const { saved_token_id, CarId } = req.body;
+
+    const history = await BoughtHistory.findAll({
+      where: {
+        id: CarId,
+        paidOff: false,
+      },
+    });
+
+    if (!history.length || history.length > 1) {
+      throw {
+        code: 400,
+        name: "SequelizeValidationError",
+        message: "Please check your input update payment.",
+      };
+    }
+
+    let data = {
+      paidOff: true
+    }
+
+    saved_token_id ? data.saved_token_id = saved_token_id : ""
+
+    await BoughtHistory.update(
+      data,
+      {
+        where: {
+          id: history[0].id,
+        },
+        transaction: t,
+      }
+    );
+
+    res.status(200).json({ message: "Payment status already updated." });
+
+    await t.commit();
+  } catch (err) {
+    await t.rollback();
+    next(err);
+  }
+};
+
+//! FIRST PAYMENT SUBCRIPTION
+const firstInstallment = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    const { id: CarId } = req.params;
+    const { token_id, term, dp, buyerId } = req.body;
+
+    const car = await Car.findByPk(+CarId);
+
+    if (!car || car.status == "sold") {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Car not found.",
+      };
+    }
+
+    if (car.status == 'pending') {
+      throw {
+          code: 400,
+          name: "UNAUTHORIZED",
+          message: "Car status pending payment for other transaction."
+      };
+    }
+
+    const buyer = await Buyer.findByPk(buyerId);
+
+    if (!buyer) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Buyer not found.",
+      };
+    }
+
+    const checkCar = await BoughtHistory.findAll({
+      where: {
+        CarId: car.id,
+      },
+    });
+
+    if (checkCar.length) {
+      throw {
+        code: 403,
+        name: "FORBIDDEN",
+        message: "Car already in subcription with term.",
+      };
+    }
+
+    let name = "MONTHLY_2021_" + CarId + "_0";
+
+    const borrow = car.dataValues.price - dp;
+
+    const installment = Math.ceil(borrow / term + borrow * 0.01);
+
+    let parameter = {
+      name,
+      amount: installment.toString(),
+      currency: "IDR",
+      payment_type: "credit_card",
+      token: token_id,
+      schedule: {
+        interval: 1,
+        interval_unit: "month",
+        max_interval: +term,
+        start_time: "2022-03-22 06:22:01 +0700",
+      },
+      metadata: {
+        description: "Recurring payment for " + car.name,
+      },
+      customer_details: {
+        username: buyer.username,
+        email: buyer.email,
+        phone: buyer.phoneNumber,
+      },
+    };
+
+    const resp = await core.createSubscription(parameter);
+
+    await Car.update({ subscriptionId: resp.id }, { where: { id: CarId } });
+
+    const data = await core.enableSubscription(resp.id);
+
+    await Car.update(
+      {
+        status: "pending",
+      },
+      {
+        where: {
+          id: car.id,
+        },
+        transaction: t
+      }
+    );
+
+    const history = await BoughtHistory.create({
+      carName: car.name,
+      description: car.description,
+      boughtDate: new Date(),
+      paidOff: false,
+      price: car.price,
+      BuyerId: buyerId,
+      orderId: "OTOSIC-" + car.id + "-" + new Date().getTime() + "-0",
+      CarId: car.id,
+      installment: true,
+      currentInstallment: 1,
+      totalInstallment: term,
+      subscriptionId: resp.id,
+    }, {
+      transaction: t
+    });
+
+    const payload = {
+      payment_type: "credit_card",
+      transaction_details: {
+        order_id: history.orderId,
+        gross_amount: +resp.amount
+      },
+      credit_card: {
+        token_id,
+        authentication: true,
+        save_token_id: true
+      },
+      item_details: [{
+        id: car.id,
+        price: +resp.amount,
+        quantity: 1,
+        name: car.name
+      }],
+      customer_details: {
+        username: buyer.username,
+        email: buyer.email,
+        phone: buyer.phoneNumber,
+        billing_address: {
+          username: buyer.username,
+          email: buyer.email,
+          phone: buyer.phoneNumber,
+          address: buyer.address
+        },
+        shipping_address: {
+          username: buyer.username,
+          email: buyer.email,
+          phone: buyer.phoneNumber,
+          address: buyer.address
+        }
+      }
+    }
+
+    let payment = await core.charge(payload);
+
+    res
+      .status(200)
+      .json({ message: payment.status_message, token: payment.token, paymentUrl: payment.redirect_url });
+    
+    await t.commit();
+  } catch (err) {
+    await t.rollback();
+    next(err);
+  }
+};
+
+//! NEXT PAYMENT SUBCRIPTION
+const nextInstallment = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    const { CarId } = req.body;
+
+    const car = await Car.findByPk(+CarId);
+
+    const history = await BoughtHistory.findAll({
+      where: {
+        CarId,
+      },
+    });
+
+    if (history.length >= history[0].totalInstallment) {
+      throw {
+        code: 403,
+        name: "FORBIDDEN",
+        message: "Car installment already finished.",
+      };
+    }
+
+    let name;
+
+    let num = history.length ? history[history.length - 1].id + 1 : 1;
+
+    if (!history.length) {
+      name = "MONTHLY_2021_" + CarId + "_" + num;
+    } else {
+      name = "MONTHLY_2021_" + CarId + "_" + num;
+    }
+
+    const resp = await core.getSubscription(car.subscriptionId);
+
+    let updateSubscriptionParam = {
+      name,
+      amount: resp.amount,
+      currency: "IDR",
+      token: resp.token,
+      schedule: {
+        interval: 1,
+        next_execution_at: "2022-04-19 07:22:01",
+      },
+    };
+
+    await core.updateSubscription(
+      car.subscriptionId,
+      updateSubscriptionParam
+    );
+
+    await BoughtHistory.create({
+      carName: car.name,
+      description: car.description,
+      boughtDate: new Date(),
+      paidOff: false,
+      price: car.price,
+      BuyerId: history[0].BuyerId,
+      orderId: history[0].orderId + "-" + num,
+      CarId,
+      installment: true,
+      currentInstallment: history[history.length - 1].currentInstallment + 1,
+      totalInstallment: history[0].totalInstallment,
+      subscriptionId: resp.id,
+    }, {
+      transaction: t
+    });
+
+    await Car.update(
+      {
+        status: "sold",
+      },
+      {
+        where: {
+          id: car.id,
+        },
+        transaction: t,
+      }
+    );
+
+    const buyer = await Buyer.findByPk(history[0].BuyerId);
+
+    const payload = {
+      transaction_details: {
+        order_id: history.orderId,
+        gross_amount: +resp.amount
+      },
+      credit_card: {
+        secure: true,
+        save_card: true
+      },
+      item_details: [{
+        id: car.id,
+        price: +resp.amount,
+        quantity: 1,
+        name: car.name
+      }],
+      customer_details: {
+        username: buyer.username,
+        email: buyer.email,
+        phone: buyer.phoneNumber,
+        billing_address: {
+          username: buyer.username,
+          email: buyer.email,
+          phone: buyer.phoneNumber,
+          address: buyer.address
+        },
+        shipping_address: {
+          username: buyer.username,
+          email: buyer.email,
+          phone: buyer.phoneNumber,
+          address: buyer.address
+        }
+      }
+    }
+
+    let payment = await snap.createTransaction(payload);
+
+    res
+      .status(200)
+      .json({ data, token: payment.token, paymentUrl: payment.redirect_url })
+
+    await t.commit()
+  } catch (err) {
+    await t.rollback()
+    next(err);
+  }
+};
+
+module.exports = { payment, firstInstallment, nextInstallment, status, updatePayment };
