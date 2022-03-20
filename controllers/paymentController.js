@@ -75,7 +75,7 @@ const payment = async (req, res, next) => {
       },
     });
 
-    if (checkCar) {
+    if (checkCar.length) {
       throw {
         code: 403,
         name: "FORBIDDEN",
@@ -93,10 +93,8 @@ const payment = async (req, res, next) => {
       orderId = "OTOSIC-" + num + "-" + new Date().getTime();
     }
 
-    const date = format(
-      new Date(add(new Date(), { days: 1 })),
-      "yyyy-MM-dd hh:mm:ss " + "+0700"
-    );
+    const date = format(new Date(add(new Date(), {days: 1})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
+
 
     let parameter = {
       transaction_details: {
@@ -284,12 +282,20 @@ const updatePayment = async (req, res, next) => {
       },
     });
 
-    if (!history.length || history.length > 1) {
+    if (!history.length) {
       throw {
         code: 400,
         name: "UNAUTHORIZED",
         message: "Please check your input update payment.",
       };
+    } else {
+      if (history.length > 1) {
+        throw {
+          code: 400,
+          name: "UNAUTHORIZED",
+          message: "Please check your input update payment.",
+        };
+      }
     }
 
     let data = {
@@ -382,10 +388,7 @@ const firstInstallment = async (req, res, next) => {
 
     const installment = Math.ceil(borrow / term + borrow * 0.01);
 
-    const date = format(
-      new Date(add(new Date(), { days: 30 })),
-      "yyyy-MM-dd hh:mm:ss " + "+0700"
-    );
+    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
 
     let parameter = {
       name,
@@ -542,6 +545,8 @@ const nextInstallment = async (req, res, next) => {
     }
 
     const resp = await core.getSubscription(car.subscriptionId);
+    
+    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss')
 
     const date = format(
       new Date(add(new Date(), { days: 30 })),
@@ -561,6 +566,15 @@ const nextInstallment = async (req, res, next) => {
 
     await core.updateSubscription(car.subscriptionId, updateSubscriptionParam);
 
+    let orderId = history[0].dataValues.orderId
+          .split("-")
+          .map((el, i) => {
+            if (i == 2) el = new Date().getTime();
+            if (i == 3) el = +el + 1;
+            return el;
+          })
+          .join("-")
+
     await BoughtHistory.create(
       {
         carName: car.name,
@@ -569,14 +583,7 @@ const nextInstallment = async (req, res, next) => {
         paidOff: false,
         price: car.price,
         BuyerId: history[0].BuyerId,
-        orderId: history[0].dataValues.orderId
-          .split("-")
-          .map((el, i) => {
-            if (i == 2) el = new Date().getTime();
-            if (i == 3) el = +el + 1;
-            return el;
-          })
-          .join("-"),
+        orderId,
         CarId,
         installment: true,
         currentInstallment: history[history.length - 1].currentInstallment + 1,
@@ -602,18 +609,10 @@ const nextInstallment = async (req, res, next) => {
 
     const buyer = await Buyer.findByPk(history[0].BuyerId);
 
-    let order_id = history[0].dataValues.orderId
-      .split("-")
-      .map((el, i) => {
-        if (i == 3) el = +el + 1;
-        return el;
-      })
-      .join("-");
-
     const payload = {
       payment_type: "credit_card",
       transaction_details: {
-        order_id,
+        order_id: orderId,
         gross_amount: +resp.amount,
       },
       credit_card: {
