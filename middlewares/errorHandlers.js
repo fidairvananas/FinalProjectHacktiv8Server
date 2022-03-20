@@ -24,6 +24,9 @@ const errorHandler = (err, req, res, next) => {
     case "TokenExpiredError":
       res.status(400).json({ message: err.message });
       break;
+    case "MidtransError":
+      res.status(+err.ApiResponse.status_code).json({ message: err.ApiResponse.status_message });
+      break;
     default:
       console.log(err);
       res.status(500).json({ message: "Internal Server Error" });
