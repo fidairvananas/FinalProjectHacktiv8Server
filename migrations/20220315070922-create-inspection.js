@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
-      interionInspection: {
+      interiorInspection: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
