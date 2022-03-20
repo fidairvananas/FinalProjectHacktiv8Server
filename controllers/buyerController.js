@@ -1,6 +1,7 @@
-const { Dealer } = require("../models");
+const { Buyer } = require("../models");
 const { generateToken } = require("../helpers/jwt");
 const { comparePassword } = require("../helpers/bcrypt");
+
 const nodemailer = require("nodemailer");
 
 let transporter = nodemailer.createTransport({
@@ -17,23 +18,21 @@ let transporter = nodemailer.createTransport({
 
 const register = async (req, res, next) => {
   try {
-    const { name, phoneNumber, email, password, storeName, storeAddress } =
-      req.body;
+    const { username, email, password, address, phoneNumber } = req.body;
 
-    const dealer = await Dealer.create({
-      name,
-      phoneNumber,
+    const buyer = await Buyer.create({
+      username,
       email,
       password,
-      storeName,
-      storeAddress,
+      address,
+      phoneNumber,
     });
 
     let mailOptions = {
       from: "jubelsinaga13@gmail.com",
-      to: dealer.email,
+      to: buyer.email,
       subject: "Success registration",
-      text: "Thank you for register on our AutoClassic",
+      text: "Thank you for register on AutoClassic",
     };
 
     transporter.sendMail(mailOptions, function (err, data) {
@@ -46,7 +45,7 @@ const register = async (req, res, next) => {
 
     res
       .status(201)
-      .json({ id: dealer.id, name: dealer.name, email: dealer.email });
+      .json({ id: buyer.id, name: buyer.username, email: buyer.email });
   } catch (err) {
     next(err);
   }
@@ -55,27 +54,26 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(email);
-    const foundDealer = await Dealer.findOne({
+
+    const foundBuyer = await Buyer.findOne({
       where: {
         email,
       },
     });
 
-    if (foundDealer) {
-      const isPassword = comparePassword(password, foundDealer.password);
-      if (isPassword) {
+    if (foundBuyer) {
+      const isPass = comparePassword(password, foundBuyer.password);
+      if (isPass) {
         const payload = {
-          id: foundDealer.id,
-          name: foundDealer.name,
-          email: foundDealer.email,
-          storeName: foundDealer.storeName,
-          phoneNumber: foundDealer.phoneNumber,
-          storeAddress: foundDealer.storeAddress,
+          id: foundBuyer.id,
+          name: foundBuyer.username,
+          email: foundBuyer.email,
+          phoneNumber: foundBuyer.phoneNumber,
+          address: foundBuyer.address,
         };
 
         res.status(200).json({
-          message: "login Succesful",
+          message: "Login as Buyer successfull",
           access_token: generateToken(payload),
         });
       } else {
