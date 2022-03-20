@@ -141,6 +141,7 @@ module.exports = (sequelize, DataTypes) => {
       status: {
         type: DataTypes.STRING,
         allowNull: false,
+        defaultValue: 'sale',
         validate: {
           notNull: {
             msg: "Status is required",
