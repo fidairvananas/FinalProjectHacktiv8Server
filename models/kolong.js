@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       kestabilanBan: DataTypes.BOOLEAN,
       shockBreaker: DataTypes.BOOLEAN,
       masterBrake: DataTypes.BOOLEAN,
+      inspectedBy: DataTypes.STRING,
       InspectionId: {
         type: DataTypes.INTEGER,
         allowNull: false,

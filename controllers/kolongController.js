@@ -35,6 +35,8 @@ const changeKolongInsp = async (req, res, next) => {
       masterBrake,
     } = req.body;
 
+    const { name } = req.loginAdmin;
+
     const kolong = await Kolong.findByPk(id);
     if (!kolong) {
       throw {
@@ -56,6 +58,7 @@ const changeKolongInsp = async (req, res, next) => {
         kestabilanBan,
         shockBreaker,
         masterBrake,
+        inspectedBy: name,
       },
       { where: { id } }
     );

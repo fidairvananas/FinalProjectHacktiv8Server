@@ -34,6 +34,7 @@ const changeExteriorInspection = async (req, res, next) => {
       tire,
     } = req.body;
     const exteriorId = req.params.id;
+    const { name } = req.loginAdmin;
 
     const exterior = await Exterior.findByPk(exteriorId);
 
@@ -56,6 +57,7 @@ const changeExteriorInspection = async (req, res, next) => {
         kacaSamping,
         kacaBelakang,
         tire,
+        inspectedBy: name,
       },
       {
         where: {

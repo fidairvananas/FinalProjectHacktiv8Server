@@ -23,6 +23,8 @@ const getRoadTest = async (req, res, next) => {
 const changeRoadTestInsp = async (req, res, next) => {
   try {
     const id = req.params.id;
+    const { name } = req.loginAdmin;
+
     const {
       engineStarting,
       engineIdling,
@@ -50,6 +52,7 @@ const changeRoadTestInsp = async (req, res, next) => {
         acceleration,
         engineSound,
         brake,
+        inspectedBy: name,
       },
       {
         where: {

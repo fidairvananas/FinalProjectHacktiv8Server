@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       acceleration: DataTypes.BOOLEAN,
       engineSound: DataTypes.BOOLEAN,
       brake: DataTypes.BOOLEAN,
+      inspectedBy: DataTypes.STRING,
       InspectionId: {
         type: DataTypes.INTEGER,
         allowNull: false,
