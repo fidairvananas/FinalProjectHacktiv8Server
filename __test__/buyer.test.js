@@ -3,6 +3,11 @@ const request = require("supertest");
 const { Buyer } = require("../models");
 const { login } = require("../controllers/buyerController");
 
+const transporter = require("../helpers/nodemailer");
+jest.mock("../helpers/nodemailer", () => {
+  return { sendMail: jest.fn((option, cb) => cb("error boss", null)) };
+});
+
 describe("Register buyer routes", () => {
   describe("POST /buyers/register - success test", () => {
     let newBuyer = {
@@ -29,6 +34,19 @@ describe("Register buyer routes", () => {
           if (err) done(err);
           expect(res.status).toBe(201);
           expect(res.body).toBeInstanceOf(Object);
+          done();
+        });
+    });
+
+    test("should return console log error when failed to send email", (done) => {
+      const sendMock = jest.fn((_, cb) => cb(null, true));
+      transporter.sendMail.mockImplementationOnce(sendMock);
+      request(app)
+        .post("/buyers/register")
+        .send(newBuyer)
+        .end(function (err, res) {
+          if (err) done(err);
+          expect(sendMock).toHaveBeenCalled();
           done();
         });
     });
