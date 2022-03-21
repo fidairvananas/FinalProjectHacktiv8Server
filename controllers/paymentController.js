@@ -93,8 +93,10 @@ const payment = async (req, res, next) => {
       orderId = "OTOSIC-" + num + "-" + new Date().getTime();
     }
 
-    const date = format(new Date(add(new Date(), {days: 1})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
-
+    const date = format(
+      new Date(add(new Date(), { days: 1 })),
+      "yyyy-MM-dd hh:mm:ss " + "+0700"
+    );
 
     let parameter = {
       transaction_details: {
@@ -388,7 +390,10 @@ const firstInstallment = async (req, res, next) => {
 
     const installment = Math.ceil(borrow / term + borrow * 0.01);
 
-    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss ' + '+0700')
+    const date = format(
+      new Date(add(new Date(), { days: 30 })),
+      "yyyy-MM-dd hh:mm:ss " + "+0700"
+    );
 
     let parameter = {
       name,
@@ -545,8 +550,6 @@ const nextInstallment = async (req, res, next) => {
     }
 
     const resp = await core.getSubscription(car.subscriptionId);
-    
-    const date = format(new Date(add(new Date(), {days: 30})), 'yyyy-MM-dd hh:mm:ss')
 
     const date = format(
       new Date(add(new Date(), { days: 30 })),
@@ -567,13 +570,13 @@ const nextInstallment = async (req, res, next) => {
     await core.updateSubscription(car.subscriptionId, updateSubscriptionParam);
 
     let orderId = history[0].dataValues.orderId
-          .split("-")
-          .map((el, i) => {
-            if (i == 2) el = new Date().getTime();
-            if (i == 3) el = +el + 1;
-            return el;
-          })
-          .join("-")
+      .split("-")
+      .map((el, i) => {
+        if (i == 2) el = new Date().getTime();
+        if (i == 3) el = +el + 1;
+        return el;
+      })
+      .join("-");
 
     await BoughtHistory.create(
       {
