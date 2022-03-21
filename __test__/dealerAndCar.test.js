@@ -387,7 +387,7 @@ describe("Car routes", () => {
   describe("GET /cars - success test", () => {
     it("should return correct response (200) with cars data", (done) => {
       request(app)
-        .get("/cars")
+        .get("/cars?page=1&maxItem=6")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Array);

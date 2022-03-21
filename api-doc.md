@@ -12,7 +12,7 @@ List of available endpoints:
 - `GET /cars`
 - `POST /cars`
 - `GET /cars/:id`
-- `GET /cars?page=2`
+- `GET /cars?page=2?maxItem=8`
 - `DELETE /cars/:id`
 - `PUT /cars/:id`
 - `PATCH /cars/:id`
