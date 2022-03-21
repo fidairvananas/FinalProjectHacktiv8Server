@@ -223,38 +223,67 @@ _Response (200 - OK)_
 ```json
 [
     {
-        "id": 3,
-        "name": "1998 Ford Mustang GT",
-        "description": "Used Ford mustang GT year 1998",
-        "fuel": "Gasoline",
-        "seats": 4,
-        "mileage": 70000,
-        "price": 200000000,
-        "color": "White",
-        "yearMade": "1998-04-23T00:00:00.000Z",
-        "passedInspection": false,
-        "DealerId": 1,
-        "TypeId": 34,
-        "createdAt": "2022-03-20T05:14:42.424Z",
-        "updatedAt": "2022-03-20T05:14:42.424Z"
-    },
-    {
-        "id": 4,
-        "name": "1995 Camaro convertible",
-        "description": "Used Chevrolet Camaro year 1995",
+        "id": 1,
+        "name": "Ford Model T Touring- 1918",
+        "description": "Used Ford Model T Touring car",
         "fuel": "Gasoline",
         "seats": 2,
-        "mileage": 85000,
-        "price": 150000000,
-        "color": "Silver-stripe-black",
-        "yearMade": "1995-04-23T00:00:00.000Z",
+        "mileage": 70000,
+        "price": 100000000,
+        "color": "Black",
+        "yearMade": "1918-04-23T00:00:00.000Z",
         "passedInspection": false,
         "DealerId": 1,
-        "TypeId": 13,
-        "createdAt": "2022-03-20T05:14:58.639Z",
-        "updatedAt": "2022-03-20T05:14:58.639Z"
+        "TypeId": 33,
+        "status": "sale",
+        "subscriptionId": "none",
+        "createdAt": "2022-03-21T07:38:06.959Z",
+        "updatedAt": "2022-03-21T07:38:06.959Z",
+        "Images": [
+            {
+                "id": 1,
+                "image": "https://www.lanemotormuseum.org/media/zoo/images/ford_modelT_1918web1a_9071f8b80d69dd143f5a7e9057f0a772.jpg",
+                "CarId": 1,
+                "createdAt": "2022-03-21T07:38:06.965Z",
+                "updatedAt": "2022-03-21T07:38:06.965Z"
+            },
+            {
+                "id": 2,
+                "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/1918_Ford_Model_T_Touring_2.9.jpg",
+                "CarId": 1,
+                "createdAt": "2022-03-21T07:38:06.965Z",
+                "updatedAt": "2022-03-21T07:38:06.965Z"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Honda Civic 1988",
+        "description": "Used Honda civic year 1988",
+        "fuel": "Gasoline",
+        "seats": 4,
+        "mileage": 150000,
+        "price": 75000000,
+        "color": "Silver",
+        "yearMade": "1988-04-23T00:00:00.000Z",
+        "passedInspection": false,
+        "DealerId": 1,
+        "TypeId": 41,
+        "status": "sale",
+        "subscriptionId": "none",
+        "createdAt": "2022-03-21T07:38:16.150Z",
+        "updatedAt": "2022-03-21T07:38:16.150Z",
+        "Images": [
+            {
+                "id": 3,
+                "image": "https://upload.wikimedia.org/wikipedia/commons/9/9f/1989_Honda_Civic_GL_sedan_%28front%29.jpg",
+                "CarId": 2,
+                "createdAt": "2022-03-21T07:38:16.151Z",
+                "updatedAt": "2022-03-21T07:38:16.151Z"
+            }
+        ]
     }
-  ...
+    ...
 ]
 ```
 
