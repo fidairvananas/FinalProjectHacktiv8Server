@@ -22,7 +22,10 @@ const getCars = async (req, res, next) => {
       (query.limit = perPage), (query.offset = (page - 1) * 10);
     }
 
-    const cars = await Car.findAndCountAll(query);
+    const cars = await Car.findAndCountAll({
+      ...query,
+      include: [{ model: Image }],
+    });
     console.log(cars.count);
     res.status(200).json(cars.rows);
   } catch (err) {
