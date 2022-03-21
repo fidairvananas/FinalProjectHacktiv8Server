@@ -1,5 +1,7 @@
 const app = require("../app");
 const request = require("supertest");
+const getBrands = require("../controllers/brandController");
+const { getType, getTypes } = require("../controllers/typeController");
 
 describe("Brand routes", () => {
   describe("GET /brands -- success test", () => {
@@ -14,6 +16,17 @@ describe("Brand routes", () => {
         .catch((err) => {
           done(err);
         });
+    });
+  });
+
+  describe("GET /brands -- failed test", () => {
+    test("should return correct response (500) when hit error", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getBrands(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
     });
   });
 });
@@ -31,6 +44,17 @@ describe("Types routes", () => {
         .catch((err) => {
           done(err);
         });
+    });
+  });
+
+  describe("GET /types -- failed test", () => {
+    test("should return correct response (500) when hit error", async () => {
+      const mReq = { body: { name: "admin" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getTypes(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
     });
   });
 
@@ -54,15 +78,24 @@ describe("Types routes", () => {
   describe("GET /type/:id -- failed test", () => {
     test("should return correct response (404) when querying for types by id not found", (done) => {
       request(app)
-        .get("/types/100")
+        .get("/types/10000")
         .then((res) => {
-          expect(res.status).toBe(200);
+          expect(res.status).toBe(404);
           expect(res.body).toBeInstanceOf(Object);
           done();
         })
         .catch((err) => {
           done(err);
         });
+    });
+
+    test("should return correct response (500) when hit error", async () => {
+      const mReq = { params: { id: 100 } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getType(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
     });
   });
 });
