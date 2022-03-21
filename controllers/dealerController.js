@@ -1,8 +1,34 @@
-const { Dealer } = require("../models");
+const { Dealer, Car } = require("../models");
 const { generateToken } = require("../helpers/jwt");
 const { comparePassword } = require("../helpers/bcrypt");
 
 let transporter = require("../helpers/nodemailer");
+
+const getDealer = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const dealer = await Dealer.findByPk(id, {
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Car,
+        },
+      ],
+    });
+
+    if (!dealer) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Dealer not found",
+      };
+    }
+
+    res.status(200).json(dealer);
+  } catch (err) {
+    next(err);
+  }
+};
 
 const register = async (req, res, next) => {
   try {
@@ -85,4 +111,4 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login };
+module.exports = { register, login, getDealer };
