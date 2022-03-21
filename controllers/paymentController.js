@@ -254,8 +254,8 @@ const status = async (req, res, next) => {
         ["BuyerId", "ASC"],
       ],
       attibutes: {
-        exclude: ['createdAt', 'updatedAt']
-      }
+        exclude: ["createdAt", "updatedAt"],
+      },
     });
 
     if (!history.length) {
@@ -286,7 +286,6 @@ const updatePayment = async (req, res, next) => {
     const { id } = req.params;
     const { saved_token_id, CarId } = req.body;
 
-
     if (!CarId) {
       throw {
         code: 400,
@@ -309,7 +308,7 @@ const updatePayment = async (req, res, next) => {
         name: "UNAUTHORIZED",
         message: "Please check your input update payment.",
       };
-    } 
+    }
 
     let data = {
       paidOff: true,
@@ -369,6 +368,14 @@ const firstInstallment = async (req, res, next) => {
       };
     }
 
+    if (+term > 60) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Term can't more than 60 times.",
+      };
+    }
+
     if (!dp) {
       throw {
         code: 400,
@@ -387,6 +394,16 @@ const firstInstallment = async (req, res, next) => {
 
     const car = await Car.findByPk(+CarId);
 
+    if (car) {
+      if (dp > car.price) {
+        throw {
+          code: 400,
+          name: "BAD_REQUEST",
+          message: "Down Payment can't extent car price.",
+        };
+      }
+    }
+
     if (!car || car.status == "sold") {
       throw {
         code: 404,
@@ -404,14 +421,6 @@ const firstInstallment = async (req, res, next) => {
     }
 
     const buyer = await Buyer.findByPk(buyerId);
-
-    if (!buyer) {
-      throw {
-        code: 404,
-        name: "NOT_FOUND",
-        message: "Buyer not found.",
-      };
-    }
 
     const checkCar = await BoughtHistory.findAll({
       where: {
@@ -557,7 +566,31 @@ const nextInstallment = async (req, res, next) => {
   try {
     const { token_id, CarId } = req.body;
 
+    if (!token_id) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Token ID can't be empty.",
+      };
+    }
+
+    if (!CarId) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Car ID can't be empty.",
+      };
+    }
+
     const car = await Car.findByPk(+CarId);
+
+    if (!car) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Car not found.",
+      };
+    }
 
     const history = await BoughtHistory.findAll({
       where: {
@@ -701,6 +734,7 @@ const nextInstallment = async (req, res, next) => {
 
     await t.commit();
   } catch (err) {
+    console.log(err, '<<<<<<<<<<<<<<<<< ERROR')
     await t.rollback();
     next(err);
   }

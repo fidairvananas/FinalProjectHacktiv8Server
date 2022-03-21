@@ -10,14 +10,14 @@ const {
   Brand,
 } = require("../models");
 const { queryInterface } = sequelize;
+const { Op } = sequelize;
 const { hashPassword } = require("../helpers/bcrypt");
 const { generateToken } = require("../helpers/jwt");
 const { format, add } = require("date-fns");
-jest.mock("../API/MidtransAPI")
 const { core } = require("../API/MidtransAPI");
-const { JsonWebTokenError } = require("jsonwebtoken");
-const CLIENT_KEY = process.env.CLIENT_KEY
-
+// const midtransClient = require("midtrans-client");
+const AUTHORIZATION = process.env.AUTHORIZATION;
+const CLIENT_KEY = process.env.CLIENT_KEY;
 
 beforeAll((done) => {
   let data = [
@@ -570,6 +570,8 @@ describe("Payment transaction from buyer using full payment", () => {
         .send(payload)
         .end((err, res) => {
           if (err) done(err);
+
+          console.log(res.body, "<<<<<<<<<<<< RES BODY");
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Object);
           expect(res.body).toHaveProperty(
@@ -1034,10 +1036,7 @@ describe("Update status payment after transaction payment was confirm from Midtr
 
           expect(res.status).toBe(400);
           expect(res.body).toBeInstanceOf(Object);
-          expect(res.body).toHaveProperty(
-            "message",
-            "Car ID can't be empty."
-          );
+          expect(res.body).toHaveProperty("message", "Car ID can't be empty.");
           done();
         });
     });
@@ -1083,12 +1082,12 @@ describe("Update status payment after transaction payment was confirm from Midtr
           done();
         });
     });
-
-    
   });
 });
 
-describe.only("Installment for first payment", () => {
+describe("Installment for first payment", () => {
+  jest.mock("../API/MidtransAPI", () => jest.fn());
+
   const buyerPayload = {
     id: 1,
     username: "Arief",
@@ -1111,10 +1110,47 @@ describe.only("Installment for first payment", () => {
 
   let token_id;
 
-  let invalid_token_id = "521111-1117-df8d8c71-91e9-417f-b97e-45717194084e"
+  let invalid_token_id = "521111-1117-df8d8c71-91e9-417f-b97e-45717194084e";
 
-  beforeEach((done) => {
-    Car.update(
+  beforeAll((done) => {
+    (core) =>
+      jest.fn(() => {
+        return {
+          cardToken: () => {
+            return new Promise((resolve) => {
+              resolve({
+                status_code: "200",
+                status_message: "Credit card token is created as Token ID.",
+                token_id: "521111-1117-df8d8c71-91e9-417f-b97e-45717194084e",
+                hash: "521111-1117-mami",
+              });
+            });
+          },
+        };
+      });
+
+    let car = {
+      name: "Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000000,
+      color: "black",
+      DealerId: 1,
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    Car.create(car)
+      .then(() => done())
+      .catch((err) => done(err));
+  });
+
+  beforeEach(async () => {
+    await Car.update(
       {
         status: "sale",
       },
@@ -1123,30 +1159,38 @@ describe.only("Installment for first payment", () => {
           id: 1,
         },
       }
-    )
-      .then(() => done())
-      .catch((err) => done(err));
+    );
+    await Car.update(
+      {
+        status: "sale",
+      },
+      {
+        where: {
+          id: 2,
+        },
+      }
+    );
 
-    core.cardToken.mockResolvedValue({
+    let resp = await core.cardToken({
       client_key: CLIENT_KEY,
-      card_number: '5211111111111117',
-      card_exp_month: format(new Date(add(new Date(), {months: 10,})), 'MM'),
-      card_exp_year: format(new Date(add(new Date(), {years: 3,})), 'yyyy'),
-      card_cvv: '123'
-    }).then(resp => {
-      token_id = resp.token_id
-      done()
-    }).catch(err => done(err))
+      card_number: "5211111111111117",
+      card_exp_month: format(new Date(add(new Date(), { months: 10 })), "MM"),
+      card_exp_year: format(new Date(add(new Date(), { years: 3 })), "yyyy"),
+      card_cvv: "123",
+    });
+
+    token_id = resp.token_id;
   });
 
   describe("POST /payments/credits/:id - Success Test", () => {
     test("Should return an Object with message 'Success, Credit Card transaction is successful'", (done) => {
       request(app)
-        .post("/payments/credits/" + 1)
+        .post("/payments/credits/" + 2)
         .set("access_token", access_token)
         .send({
-          CarId: 1,
-          saved_token_id: "521111xQySBnVPMTomuTNIowOmJi1117",
+          token_id,
+          term: 12,
+          dp: 200000000,
         })
         .end((err, res) => {
           if (err) done(err);
@@ -1155,21 +1199,23 @@ describe.only("Installment for first payment", () => {
           expect(res.body).toBeInstanceOf(Object);
           expect(res.body).toHaveProperty(
             "message",
-            "Payment status already updated."
+            "Success, Credit Card transaction is successful"
           );
+          expect(res.body).toHaveProperty("paymentUrl", expect.any(String));
           done();
         });
     });
   });
 
-  describe.skip("PATCH /payments/update/:id - Failed Test", () => {
+  describe("POST /payments/credits/:id - Failed Test Part.1", () => {
     test("If client didn't send buyer Id in req.params should return an Object with message 'Buyer ID can't be empty.'", (done) => {
       request(app)
-        .patch("/payments/update/")
+        .post("/payments/credits/")
         .set("access_token", access_token)
         .send({
-          CarId: 1,
-          saved_token_id: "521111xQySBnVPMTomuTNIowOmJi1117",
+          token_id,
+          term: 12,
+          dp: 200000000,
         })
         .end((err, res) => {
           if (err) done(err);
@@ -1183,6 +1229,508 @@ describe.only("Installment for first payment", () => {
           done();
         });
     });
-    
+
+    test("If client didn't send term in req.body should return an Object with message 'Term can't be empty.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 2)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          dp: 200000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", "Term can't be empty.");
+          done();
+        });
+    });
+
+    test("If client send term more than 60 in req.body should return an Object with message 'Term can't more than 60 times.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 2)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          term: 100,
+          dp: 200000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Term can't more than 60 times."
+          );
+          done();
+        });
+    });
+
+    test("If client didn't send down payment in req.body should return an Object with message 'Down Payment can't be empty.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 2)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          term: 12,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Down Payment can't be empty."
+          );
+          done();
+        });
+    });
+
+    test("If client send down payment more than car price in req.body should return an Object with message 'Down Payment can't extent car price.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 2)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          term: 12,
+          dp: 2000000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Down Payment can't extent car price."
+          );
+          done();
+        });
+    });
+
+    test("If client didn't send token_id in req.body should return an Object with message 'Token ID can't be empty.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 2)
+        .set("access_token", access_token)
+        .send({
+          term: 12,
+          dp: 200000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Token ID can't be empty."
+          );
+          done();
+        });
+    });
+  });
+
+  describe("POST /payments/credits/:id - Failed Test Part.2", () => {
+    beforeEach(async () => {
+      await Car.update(
+        {
+          status: "sold",
+        },
+        {
+          where: {
+            id: 2,
+          },
+        }
+      );
+    });
+
+    test("If client want to bought a car that has already sold should return an Object with message 'Car not found.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 2)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          term: 12,
+          dp: 200000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", "Car not found.");
+          done();
+        });
+    });
+
+    test("If client want to bought a car that hasn't in database should return an Object with message 'Car not found.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 200)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          term: 12,
+          dp: 200000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", "Car not found.");
+          done();
+        });
+    });
+  });
+
+  describe("POST /payments/credits/:id - Failed Test Part.3", () => {
+    beforeEach(async () => {
+      await Car.update(
+        {
+          status: "pending",
+        },
+        {
+          where: {
+            id: 2,
+          },
+        }
+      );
+    });
+
+    test("If client want to bought a car that has already sold should return an Object with message 'Car status pending payment for other transaction.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 2)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          term: 12,
+          dp: 200000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Car status pending payment for other transaction."
+          );
+          done();
+        });
+    });
+  });
+
+  describe("POST /payments/credits/:id - Failed Test Part.4", () => {
+    test("If client want to bought a car that has already sold should return an Object with message 'Car already in subcription with term.'", (done) => {
+      request(app)
+        .post("/payments/credits/" + 1)
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          term: 12,
+          dp: 200000000,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(403);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Car already in subcription with term."
+          );
+          done();
+        });
+    });
+  });
+});
+
+describe("Installment for next payment", () => {
+  jest.mock("../API/MidtransAPI", () => jest.fn());
+
+  const buyerPayload = {
+    id: 1,
+    username: "Arief",
+    email: "arief.zhang21@gmail.com",
+    address: "Jl. Bandung",
+    phoneNumber: "0897867564",
+  };
+
+  const buyerPayload2 = {
+    id: 2,
+    username: "Jubel",
+    email: "jubelsinaga13@gmail.com",
+    address: "Jl. Medan",
+    phoneNumber: "0876543210",
+  };
+
+  let access_token = generateToken(buyerPayload);
+
+  let token_id;
+
+  beforeAll((done) => {
+    (core) =>
+      jest.fn(() => {
+        return {
+          cardToken: () => {
+            return new Promise((resolve) => {
+              resolve({
+                status_code: "200",
+                status_message: "Credit card token is created as Token ID.",
+                token_id: "521111-1117-df8d8c71-91e9-417f-b97e-45717194084e",
+                hash: "521111-1117-mami",
+              });
+            });
+          },
+        };
+      });
+
+    (core) =>
+      jest.fn(() => {
+        return {
+          getSubscription: () => {
+            return new Promise((resolve) => {
+              resolve({
+                id: "4fcc7e07-264e-480a-8380-c083a5d5e206",
+                name: "MONTHLY_2021_1_OTOSIC-01-1647857284920-1",
+                amount: "137333334",
+                currency: "IDR",
+                created_at: "2022-03-21 17:08:05",
+                schedule: {
+                  interval: 1,
+                  current_interval: 0,
+                  max_interval: 3,
+                  interval_unit: "month",
+                  start_time: "2022-04-20 05:08:04",
+                  next_execution_at: "2022-04-20 05:08:04",
+                },
+                status: "active",
+                token: "521111-1117-df8d8c71-91e9-417f-b97e-45717194084e",
+                payment_type: "credit_card",
+                transaction_ids: [],
+                metadata: { description: "Recurring payment for Mustang G5" },
+                customer_details: {
+                  email: "arief.zhang21@gmail.com",
+                  phone: "0897867564",
+                },
+              });
+            });
+          },
+        };
+      });
+
+    (core) =>
+      jest.fn(() => {
+        return {
+          updateSubscription: () => {
+            return new Promise((resolve) => {
+              resolve({
+                message: "Subscription has been updated.",
+              });
+            });
+          },
+        };
+      });
+
+    let car = {
+      name: "Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000000,
+      color: "black",
+      DealerId: 1,
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 1,
+      subscriptionId: "4fcc7e07-264e-480a-8380-c083a5d5e206",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    Car.create(car)
+      .then(() => done())
+      .catch((err) => done(err));
+
+    Car.update(
+      {
+        status: "sold",
+      },
+      {
+        where: {
+          id: 3,
+        },
+      }
+    )
+      .then(() => done())
+      .catch((err) => done(err));
+
+    BoughtHistory.create({
+      carName: car.name,
+      description: car.description,
+      boughtDate: new Date(),
+      paidOff: true,
+      price: car.price,
+      BuyerId: 1,
+      orderId: "OTOSIC-0" + car.id + "-" + new Date().getTime() + "-0",
+      CarId: 3,
+      installment: true,
+      currentInstallment: 1,
+      totalInstallment: 3,
+      saved_token_id: "521111bOTBrmSVloNsxMrGjcCUol1117",
+    })
+      .then(() => done())
+      .catch((err) => done(err));
+  });
+
+  beforeEach(async () => {
+    let resp = await core.cardToken({
+      client_key: CLIENT_KEY,
+      token_id: "521111bOTBrmSVloNsxMrGjcCUol1117",
+      card_cvv: "123",
+    });
+
+    token_id = resp.token_id;
+  });
+
+  describe("POST /payments/credits/cars - Success Test", () => {
+    test("Should return an Object with message 'Success, Credit Card transaction is successful'", (done) => {
+      request(app)
+        .post("/payments/credits/cars")
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          CarId: 3,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("paymentUrl", expect.any(String));
+          done();
+        });
+    });
+  });
+
+  describe("POST /payments/credits/cars - Failed Test Part.1", () => {
+    test("If client didn't send car Id in req.body should return an Object with message 'Car ID can't be empty.'", (done) => {
+      request(app)
+        .post("/payments/credits/cars")
+        .set("access_token", access_token)
+        .send({
+          token_id,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", "Car ID can't be empty.");
+          done();
+        });
+    });
+
+    test("If client didn't send token Id in req.body should return an Object with message 'Token ID can't be empty.'", (done) => {
+      request(app)
+        .post("/payments/credits/cars")
+        .set("access_token", access_token)
+        .send({
+          CarId: 3,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Token ID can't be empty."
+          );
+          done();
+        });
+    });
+
+    test("If client didn't send token Id in req.body should return an Object with message 'Car not found.'", (done) => {
+      request(app)
+        .post("/payments/credits/cars")
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          CarId: 300,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty("message", "Car not found.");
+          done();
+        });
+    });
+  });
+
+  describe("POST /payments/credits/cars - Failed Test Part.2", () => {
+    beforeEach((done) => {
+      BoughtHistory.create({
+        carName: "Mustang G5",
+        description: "This is sport car",
+        boughtDate: new Date(),
+        paidOff: true,
+        price: 1000000000,
+        BuyerId: 1,
+        orderId: "OTOSIC-0" + 3 + "-" + new Date().getTime() + "-0",
+        CarId: 3,
+        installment: true,
+        currentInstallment: 2,
+        totalInstallment: 3,
+        saved_token_id: "521111bOTBrmSVloNsxMrGjcCUol1117",
+      })
+        .then(() => done())
+        .catch((err) => done(err));
+
+      BoughtHistory.create({
+        carName: "Mustang G5",
+        description: "This is sport car",
+        boughtDate: new Date(),
+        paidOff: true,
+        price: 1000000000,
+        BuyerId: 1,
+        orderId: "OTOSIC-0" + 3 + "-" + new Date().getTime() + "-0",
+        CarId: 3,
+        installment: true,
+        currentInstallment: 3,
+        totalInstallment: 3,
+        saved_token_id: "521111bOTBrmSVloNsxMrGjcCUol1117",
+      })
+        .then(() => done())
+        .catch((err) => done(err));
+    });
+
+    test("If buyer already finished installment should return an Object with message 'Car installment already finished.'", (done) => {
+      request(app)
+        .post("/payments/credits/cars")
+        .set("access_token", access_token)
+        .send({
+          token_id,
+          CarId: 3,
+        })
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(403);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty(
+            "message",
+            "Car installment already finished."
+          );
+          done();
+        });
+    });
   });
 });
