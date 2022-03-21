@@ -17,11 +17,7 @@ List of available endpoints:
 - `PATCH /cars/:id`
 - `GET /inspections`
 - `GET /inspections/:id`
-- `PATCH /inspections/main/:id`
-- `PATCH /inspections/exterior/:id`
-- `PATCH /inspections/interior/:id`
-- `PATCH /inspections/roadtest/:id`
-- `PATCH /inspections/kolong/:id`
+- `PATCH /inspections/:id`
 - `PATCH /inspections/exterior-detail/:id`
 - `GET /inspections/exterior-detail/:id`
 - `PATCH /inspections/interior-detail/:id`
@@ -227,38 +223,67 @@ _Response (200 - OK)_
 ```json
 [
     {
-        "id": 3,
-        "name": "1998 Ford Mustang GT",
-        "description": "Used Ford mustang GT year 1998",
-        "fuel": "Gasoline",
-        "seats": 4,
-        "mileage": 70000,
-        "price": 200000000,
-        "color": "White",
-        "yearMade": "1998-04-23T00:00:00.000Z",
-        "passedInspection": false,
-        "DealerId": 1,
-        "TypeId": 34,
-        "createdAt": "2022-03-20T05:14:42.424Z",
-        "updatedAt": "2022-03-20T05:14:42.424Z"
-    },
-    {
-        "id": 4,
-        "name": "1995 Camaro convertible",
-        "description": "Used Chevrolet Camaro year 1995",
+        "id": 1,
+        "name": "Ford Model T Touring- 1918",
+        "description": "Used Ford Model T Touring car",
         "fuel": "Gasoline",
         "seats": 2,
-        "mileage": 85000,
-        "price": 150000000,
-        "color": "Silver-stripe-black",
-        "yearMade": "1995-04-23T00:00:00.000Z",
+        "mileage": 70000,
+        "price": 100000000,
+        "color": "Black",
+        "yearMade": "1918-04-23T00:00:00.000Z",
         "passedInspection": false,
         "DealerId": 1,
-        "TypeId": 13,
-        "createdAt": "2022-03-20T05:14:58.639Z",
-        "updatedAt": "2022-03-20T05:14:58.639Z"
+        "TypeId": 33,
+        "status": "sale",
+        "subscriptionId": "none",
+        "createdAt": "2022-03-21T07:38:06.959Z",
+        "updatedAt": "2022-03-21T07:38:06.959Z",
+        "Images": [
+            {
+                "id": 1,
+                "image": "https://www.lanemotormuseum.org/media/zoo/images/ford_modelT_1918web1a_9071f8b80d69dd143f5a7e9057f0a772.jpg",
+                "CarId": 1,
+                "createdAt": "2022-03-21T07:38:06.965Z",
+                "updatedAt": "2022-03-21T07:38:06.965Z"
+            },
+            {
+                "id": 2,
+                "image": "https://upload.wikimedia.org/wikipedia/commons/a/a3/1918_Ford_Model_T_Touring_2.9.jpg",
+                "CarId": 1,
+                "createdAt": "2022-03-21T07:38:06.965Z",
+                "updatedAt": "2022-03-21T07:38:06.965Z"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Honda Civic 1988",
+        "description": "Used Honda civic year 1988",
+        "fuel": "Gasoline",
+        "seats": 4,
+        "mileage": 150000,
+        "price": 75000000,
+        "color": "Silver",
+        "yearMade": "1988-04-23T00:00:00.000Z",
+        "passedInspection": false,
+        "DealerId": 1,
+        "TypeId": 41,
+        "status": "sale",
+        "subscriptionId": "none",
+        "createdAt": "2022-03-21T07:38:16.150Z",
+        "updatedAt": "2022-03-21T07:38:16.150Z",
+        "Images": [
+            {
+                "id": 3,
+                "image": "https://upload.wikimedia.org/wikipedia/commons/9/9f/1989_Honda_Civic_GL_sedan_%28front%29.jpg",
+                "CarId": 2,
+                "createdAt": "2022-03-21T07:38:16.151Z",
+                "updatedAt": "2022-03-21T07:38:16.151Z"
+            }
+        ]
     }
-  ...
+    ...
 ]
 ```
 
@@ -759,11 +784,11 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 13. PATCH /main/:id
+## 13. PATCH /:id
 
 Description:
 
-- Change main inspection status on inspection table
+- Change inspections status on inspection table
 
 Request:
 
@@ -787,206 +812,10 @@ Request:
 
 ```json
 {
-  "mainInspection": "boolean"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Main inspection updated"
-}
-```
-
-_Response (404 - Not Found)_
-
-```json
-{
-  "message": "Inspection not found"
-}
-```
-
-&nbsp;
-
-## 14. PATCH /exterior/:id
-
-Description:
-
-- Change exterior inspection status on inspection table
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-- body:
-
-```json
-{
-  "exteriorInspection": "boolean"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Exterior inspection updated"
-}
-```
-
-_Response (404 - Not Found)_
-
-```json
-{
-  "message": "Inspection not found"
-}
-```
-
-&nbsp;
-
-## 15. PATCH /interior/:id
-
-Description:
-
-- Change interior inspection status on inspection table
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-- body:
-
-```json
-{
-  "interiorInspection": "boolean"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Interior inspection updated"
-}
-```
-
-_Response (404 - Not Found)_
-
-```json
-{
-  "message": "Inspection not found"
-}
-```
-
-&nbsp;
-
-## 16. PATCH /roadtest/:id
-
-Description:
-
-- Change roadtest inspection status on inspection table
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-- body:
-
-```json
-{
-  "roadTest": "boolean"
-}
-```
-
-_Response (200 - OK)_
-
-```json
-{
-  "message": "Road test inspection updated"
-}
-```
-
-_Response (404 - Not Found)_
-
-```json
-{
-  "message": "Inspection not found"
-}
-```
-
-&nbsp;
-
-## 17. PATCH /kolong/:id
-
-Description:
-
-- Change kolong inspection status on inspection table
-
-Request:
-
-- headers:
-
-```json
-{
-  "access_token": "string (required)"
-}
-```
-
-- params:
-
-```json
-{
-  "id": "integer (required)"
-}
-```
-
-- body:
-
-```json
-{
+  "mainInspection": "boolean",
+  "exteriorInspection": "boolean",
+  "interiorInspection": "boolean",
+  "roadTest": "boolean",
   "kolongTest": "boolean"
 }
 ```
@@ -995,7 +824,7 @@ _Response (200 - OK)_
 
 ```json
 {
-  "message": "Kolong inspection updated"
+  "message": "Inspection updated"
 }
 ```
 
@@ -1009,7 +838,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 18. PATCH /exterior-detail/:id
+## 14. PATCH /exterior-detail/:id
 
 Description:
 
@@ -1067,7 +896,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 19. GET /exterior-detail/:id
+## 15. GET /exterior-detail/:id
 
 Description:
 
@@ -1114,7 +943,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 20. PATCH /interior-detail/:id
+## 16. PATCH /interior-detail/:id
 
 Description:
 
@@ -1171,7 +1000,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 21. GET /interior-detail/:id
+## 17. GET /interior-detail/:id
 
 Description:
 
@@ -1217,7 +1046,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 22. PATCH /kolong-detail/:id
+## 18. PATCH /kolong-detail/:id
 
 Description:
 
@@ -1276,7 +1105,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 23. GET /kolong-detail/:id
+## 19. GET /kolong-detail/:id
 
 Description:
 
@@ -1324,7 +1153,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 24. PATCH /roadtest-detail/:id
+## 20. PATCH /roadtest-detail/:id
 
 Description:
 
@@ -1379,7 +1208,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 25. GET /roadtest-detail/:id
+## 21. GET /roadtest-detail/:id
 
 Description:
 
@@ -1423,7 +1252,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 26. GET /brands
+## 22. GET /brands
 
 Description:
 
@@ -1461,7 +1290,7 @@ _Response (200 - OK)_
 
 &nbsp;
 
-## 28. GET /types
+## 23. GET /types
 
 Description:
 
@@ -1506,7 +1335,7 @@ _Response (200 - OK)_
 ]
 ```
 
-## 29. GET /types/:id
+## 24. GET /types/:id
 
 Description:
 

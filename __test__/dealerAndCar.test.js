@@ -3,6 +3,12 @@ const request = require("supertest");
 const { sequelize, Dealer, Car } = require("../models");
 const { queryInterface } = sequelize;
 const { login } = require("../controllers/dealerController");
+const { getCars } = require("../controllers/carController");
+
+const transporter = require("../helpers/nodemailer");
+jest.mock("../helpers/nodemailer", () => {
+  return { sendMail: jest.fn((option, cb) => cb("error boss", null)) };
+});
 
 let access_token;
 
@@ -51,6 +57,7 @@ describe("Register dealer routes", () => {
       storeName: "Cars",
       storeAddress: "Jakarta",
     };
+
     beforeEach(async () => {
       await Dealer.destroy({
         where: { email: newDealer.email },
@@ -68,6 +75,19 @@ describe("Register dealer routes", () => {
           expect(res.body).toHaveProperty("id", expect.any(Number));
           expect(res.body).toHaveProperty("email", newDealer.email);
           expect(res.body).toHaveProperty("name", newDealer.name);
+          done();
+        });
+    });
+
+    test("should return console log error when failed to send email", (done) => {
+      const sendMockDeal = jest.fn((_, cb) => cb(null, true));
+      transporter.sendMail.mockImplementationOnce(sendMockDeal);
+      request(app)
+        .post("/dealers/register")
+        .send(newDealer)
+        .end(function (err, res) {
+          if (err) done(err);
+          expect(sendMockDeal).toHaveBeenCalled();
           done();
         });
     });
@@ -92,9 +112,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when email is not inputted", (done) => {
       request(app)
         .post("/dealers/register")
@@ -113,9 +131,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when email is not valid", (done) => {
       request(app)
         .post("/dealers/register")
@@ -135,9 +151,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when email is duplicate", (done) => {
       request(app)
         .post("/dealers/register")
@@ -157,9 +171,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when password is not inputted", (done) => {
       request(app)
         .post("/dealers/register")
@@ -178,9 +190,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when password less than 5 character", (done) => {
       request(app)
         .post("/dealers/register")
@@ -200,9 +210,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when phone number is not inputted", (done) => {
       request(app)
         .post("/dealers/register")
@@ -221,9 +229,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when store name is not inputted", (done) => {
       request(app)
         .post("/dealers/register")
@@ -242,9 +248,7 @@ describe("Register dealer routes", () => {
           done();
         });
     });
-  });
 
-  describe("POST /dealers/register - failed test", () => {
     test("should return correct response (400) when store address is not inputted", (done) => {
       request(app)
         .post("/dealers/register")
@@ -325,6 +329,17 @@ describe("Car routes", () => {
         .catch((err) => {
           done(err);
         });
+    });
+  });
+
+  describe("GET /cars -- failed test", () => {
+    test("should return correct response (500) when hit error", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getCars(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
     });
   });
 
