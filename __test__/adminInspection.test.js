@@ -10,6 +10,7 @@ const {
 } = require("../models");
 const { queryInterface } = sequelize;
 const { login } = require("../controllers/adminController");
+const { getInspections } = require("../controllers/inspectionController");
 
 let newAdmin = {
   name: "Admin",
@@ -321,6 +322,15 @@ describe("Inspection test", () => {
         .catch((err) => {
           done(err);
         });
+    });
+
+    test("should return correct response (500) when hit error", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getInspections(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
     });
   });
 
