@@ -194,14 +194,6 @@ const payment = async (req, res, next) => {
 
     let data = await snap.createTransaction(parameter);
 
-    if (!data.token) {
-      throw {
-        code: 403,
-        name: "FORBIDDEN",
-        message: "Access denied.",
-      };
-    }
-
     await Car.update(
       {
         status: "pending",
@@ -247,6 +239,14 @@ const status = async (req, res, next) => {
   try {
     const { BuyerId } = req.query;
 
+    if (!BuyerId) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Buyer ID can't be empty.",
+      };
+    }
+
     const buyer = await Buyer.findByPk(BuyerId);
 
     if (!buyer) {
@@ -265,13 +265,16 @@ const status = async (req, res, next) => {
         ["id", "DESC"],
         ["BuyerId", "ASC"],
       ],
+      attibutes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
     });
 
-    if (!history) {
+    if (!history.length) {
       throw {
         code: 404,
         name: "NOT_FOUND",
-        message: "Bought history from: " + buyer.name + " not found.",
+        message: "Bought history not found.",
       };
     }
 

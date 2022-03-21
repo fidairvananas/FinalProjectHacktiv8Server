@@ -372,10 +372,9 @@ describe("Payment transaction from buyer using full payment", () => {
 });
 
 
-
 describe("Get all transaction from buyer by ID", () => {
   describe("GET /payments/status - Success Test", () => {
-    test("should return an Array of bought history", (done) => {
+    test("Should return an Array of bought history", (done) => {
       request(app)
         .get("/payments/status?BuyerId=" + 1)
         .end((err, res) => {
@@ -383,8 +382,62 @@ describe("Get all transaction from buyer by ID", () => {
 
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Array);
+          expect(res.body[0]).toBeInstanceOf(Object)
+          expect(res.body[0]).toHaveProperty('id', expect.any(Number))
+          expect(res.body[0]).toHaveProperty('carName', expect.any(String))
+          expect(res.body[0]).toHaveProperty('description', expect.any(String))
+          expect(res.body[0]).toHaveProperty('boughtDate', expect.any(String))
+          expect(res.body[0]).toHaveProperty('paidOff', expect.any(Boolean))
+          expect(res.body[0]).toHaveProperty('price', expect.any(Number))
+          expect(res.body[0]).toHaveProperty('BuyerId', expect.any(Number))
+          expect(res.body[0]).toHaveProperty('orderId', expect.any(String))
+          expect(res.body[0]).toHaveProperty('installment', expect.any(Boolean))
+          expect(res.body[0]).toHaveProperty('currentInstallment', expect.any(Number))
           done();
         });
     });
+  });
+
+  describe("GET /payments/status - Failed Test", () => {
+
+    test("If client didn't send buyer Id in req.query should return an Object with message 'Buyer ID can't be empty.'", (done) => {
+      request(app)
+        .get("/payments/status")
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(400);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty('message', "Buyer ID can't be empty.")
+          done();
+        });
+    });
+
+    test("If buyer didn't in database should return an Object with message 'Buyer not found.'", (done) => {
+      request(app)
+        .get("/payments/status?BuyerId=" + 100)
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty('message', "Buyer not found.")
+          done();
+        });
+    });
+
+    test("If buyer hasn't have any bought history should return an Object with message 'Bought history not found.'", (done) => {
+      request(app)
+        .get("/payments/status?BuyerId=" + 2)
+        .end((err, res) => {
+          if (err) done(err);
+
+          expect(res.status).toBe(404);
+          expect(res.body).toBeInstanceOf(Object);
+          expect(res.body).toHaveProperty('message', "Bought history not found.")
+          done();
+        });
+    });
+
   });
 });
