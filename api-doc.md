@@ -8,6 +8,7 @@ List of available endpoints:
 - `POST /admins/login`
 - `POST /dealers/register`
 - `POST /dealers/login`
+- `GET /dealers/:id`
 - `GET /cars`
 - `POST /cars`
 - `GET /cars/:id`
@@ -201,7 +202,62 @@ _Response (401 - Unauthorized)_
 
 &nbsp;
 
-## 5. GET /cars
+## 5. GET /dealers/:id
+
+Description:
+
+- Get dealers by id include car owned by dealer
+
+Request:
+
+- params:
+
+```json
+{
+  "id": "integer(required)"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+    "id": 1,
+    "name": "Jubel",
+    "phoneNumber": "081311107954",
+    "email": "jubelsinaga13@gmail.com",
+    "storeName": "Jubel Classic",
+    "storeAddress": "Medan helvetia",
+    "createdAt": "2022-03-21T07:37:13.166Z",
+    "updatedAt": "2022-03-21T07:37:13.166Z",
+    "Cars": [
+        {
+            "id": 1,
+            "name": "Ford Model T Touring- 1918",
+            "description": "Used Ford Model T Touring car",
+            "fuel": "Gasoline",
+            "seats": 2,
+            "mileage": 70000,
+            "price": 100000000,
+            "color": "Black",
+            "yearMade": "1918-04-23T00:00:00.000Z",
+            "passedInspection": false,
+            "DealerId": 1,
+            "TypeId": 33,
+            "status": "sale",
+            "subscriptionId": "none",
+            "createdAt": "2022-03-21T07:38:06.959Z",
+            "updatedAt": "2022-03-21T07:38:06.959Z"
+        },
+        ...
+    ]
+}
+
+```
+
+&nbsp;
+
+## 6. GET /cars
 
 Description:
 
@@ -289,7 +345,7 @@ _Response (200 - OK)_
 
 &nbsp;
 
-## 6. POST /cars
+## 7. POST /cars
 
 Description:
 
@@ -350,7 +406,7 @@ OR
 
 &nbsp;
 
-## 7. GET /cars/:id
+## 8. GET /cars/:id
 
 Description:
 
@@ -446,7 +502,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 8. DELETE /cars/:id
+## 9. DELETE /cars/:id
 
 Description:
 
