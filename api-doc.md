@@ -202,7 +202,7 @@ _Response (401 - Unauthorized)_
 
 &nbsp;
 
-## 6. GET /dealers/:id
+## 5. GET /dealers/:id
 
 Description:
 
@@ -220,7 +220,7 @@ Request:
 
 _Response (200 - OK)_
 
-````json
+```json
 {
     "id": 1,
     "name": "Jubel",
@@ -253,7 +253,11 @@ _Response (200 - OK)_
     ]
 }
 
-## 5. GET /cars
+```
+
+&nbsp;
+
+## 6. GET /cars
 
 Description:
 
@@ -268,7 +272,7 @@ Request:
   "type": "String",
   "page": "integer"
 }
-````
+```
 
 _Response (200 - OK)_
 
@@ -341,7 +345,7 @@ _Response (200 - OK)_
 
 &nbsp;
 
-## 6. POST /cars
+## 7. POST /cars
 
 Description:
 
@@ -402,7 +406,7 @@ OR
 
 &nbsp;
 
-## 7. GET /cars/:id
+## 8. GET /cars/:id
 
 Description:
 
@@ -498,7 +502,7 @@ _Response (404 - Not Found)_
 
 &nbsp;
 
-## 8. DELETE /cars/:id
+## 9. DELETE /cars/:id
 
 Description:
 
