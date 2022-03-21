@@ -12,6 +12,9 @@ const errorHandler = (err, req, res, next) => {
     case "UNAUTHORIZED":
       res.status(err.code).json({ message: err.message });
       break;
+    case "FORBIDDEN":
+      res.status(err.code).json({ message: err.message });
+      break;
     case "INVALID_TOKEN":
       res.status(err.code).json({ message: err.message });
       break;
