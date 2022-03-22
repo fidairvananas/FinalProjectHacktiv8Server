@@ -8,7 +8,7 @@ jest.mock("../helpers/nodemailer", () => {
   return { sendMail: jest.fn((option, cb) => cb("error boss", null)) };
 });
 
-describe("Register buyer routes", () => {
+describe.skip("Register buyer routes", () => {
   describe("POST /buyers/register - success test", () => {
     let newBuyer = {
       username: "Buyer",
@@ -177,7 +177,7 @@ describe("Register buyer routes", () => {
   });
 });
 
-describe("Buyer login routes", () => {
+describe.skip("Buyer login routes", () => {
   describe("POST /buyers/login - success test", () => {
     let buyer = {
       email: "buyer@mail.com",
