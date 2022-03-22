@@ -1,4 +1,4 @@
-const { Dealer, Car } = require("../models");
+const { Dealer, Car, Type, Brand } = require("../models");
 const { generateToken } = require("../helpers/jwt");
 const { comparePassword } = require("../helpers/bcrypt");
 
