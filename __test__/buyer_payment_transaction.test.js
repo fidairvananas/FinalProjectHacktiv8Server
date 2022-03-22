@@ -62,18 +62,18 @@ describe("Get all transaction from buyer by ID", () => {
       updatedAt: new Date(),
     };
 
-    let brand = {
-      name: "Ford",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let brand = {
+    //   name: "Ford",
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
-    let type = {
-      modelName: "Sedan",
-      BrandId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let type = {
+    //   modelName: "Sedan",
+    //   BrandId: 1,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
     let car = {
       name: "Mustang G5",
@@ -102,12 +102,6 @@ describe("Get all transaction from buyer by ID", () => {
       })
       .then(() => {
         return Dealer.create(dealer);
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Brands", [brand], {});
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Types", [type], {});
       })
       .then(() => {
         return Car.create(car);
@@ -141,20 +135,6 @@ describe("Get all transaction from buyer by ID", () => {
       })
       .then(() => {
         return queryInterface.bulkDelete("Dealers", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Types", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Brands", null, {
           truncate: true,
           cascade: true,
           restartIdentity: true,
@@ -298,18 +278,18 @@ describe("Update status payment after transaction payment was confirm from Midtr
       updatedAt: new Date(),
     };
 
-    let brand = {
-      name: "Ford",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let brand = {
+    //   name: "Ford",
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
-    let type = {
-      modelName: "Sedan",
-      BrandId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let type = {
+    //   modelName: "Sedan",
+    //   BrandId: 1,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
     let car = {
       name: "Mustang G5",
@@ -339,12 +319,6 @@ describe("Update status payment after transaction payment was confirm from Midtr
       })
       .then(() => {
         return Dealer.create(dealer);
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Brands", [brand], {});
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Types", [type], {});
       })
       .then(() => {
         return Car.create(car);
@@ -383,20 +357,7 @@ describe("Update status payment after transaction payment was confirm from Midtr
           restartIdentity: true,
         });
       })
-      .then(() => {
-        return queryInterface.bulkDelete("Types", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Brands", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
+
       .then(() => {
         return queryInterface.bulkDelete("Cars", null, {
           truncate: true,
@@ -590,18 +551,18 @@ describe("Installment for first payment", () => {
       updatedAt: new Date(),
     };
 
-    let brand = {
-      name: "Ford",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let brand = {
+    //   name: "Ford",
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
-    let type = {
-      modelName: "Sedan",
-      BrandId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let type = {
+    //   modelName: "Sedan",
+    //   BrandId: 1,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
     let car = {
       name: "Mustang G5",
@@ -632,12 +593,6 @@ describe("Installment for first payment", () => {
         return Dealer.create(dealer);
       })
       .then(() => {
-        return queryInterface.bulkInsert("Brands", [brand], {});
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Types", [type], {});
-      })
-      .then(() => {
         return Car.create(car);
       })
       .then(() => done())
@@ -653,20 +608,6 @@ describe("Installment for first payment", () => {
       })
       .then(() => {
         return queryInterface.bulkDelete("Dealers", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Types", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Brands", null, {
           truncate: true,
           cascade: true,
           restartIdentity: true,
@@ -1080,18 +1021,18 @@ describe("Installment for next payment", () => {
       updatedAt: new Date(),
     };
 
-    let brand = {
-      name: "Ford",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let brand = {
+    //   name: "Ford",
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
-    let type = {
-      modelName: "Sedan",
-      BrandId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let type = {
+    //   modelName: "Sedan",
+    //   BrandId: 1,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
     let car = {
       name: "Mustang G5",
@@ -1120,12 +1061,6 @@ describe("Installment for next payment", () => {
       })
       .then(() => {
         return Dealer.create(dealer);
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Brands", [brand], {});
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Types", [type], {});
       })
       .then(() => {
         return Car.create(car);
@@ -1176,20 +1111,7 @@ describe("Installment for next payment", () => {
           restartIdentity: true,
         });
       })
-      .then(() => {
-        return queryInterface.bulkDelete("Types", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Brands", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
+
       .then(() => {
         return queryInterface.bulkDelete("Cars", null, {
           truncate: true,
@@ -1287,5 +1209,4 @@ describe("Installment for next payment", () => {
         });
     });
   });
-
 });
