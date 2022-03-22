@@ -19,6 +19,8 @@ const { core } = require("../API/MidtransAPI");
 const AUTHORIZATION = process.env.AUTHORIZATION;
 const CLIENT_KEY = process.env.CLIENT_KEY;
 
+const { login } = require("../controllers/buyerController");
+
 beforeAll((done) => {
   let data = [
     {
@@ -122,6 +124,11 @@ afterAll((done) => {
     .catch((err) => done(err));
 });
 
+const transporter = require("../helpers/nodemailer");
+jest.mock("../helpers/nodemailer", () => {
+  return { sendMail: jest.fn((option, cb) => cb("error boss", null)) };
+});
+
 describe("Register buyer routes", () => {
   describe("POST /buyers/register - success test", () => {
     let newUser = {
@@ -132,7 +139,7 @@ describe("Register buyer routes", () => {
       address: "Bandung",
     };
     beforeEach((done) => {
-      Dealer.destroy({
+      Buyer.destroy({
         where: { email: newUser.email },
       })
         .then(() => done())
@@ -151,6 +158,19 @@ describe("Register buyer routes", () => {
           expect(res.body).toHaveProperty("id", expect.any(Number));
           expect(res.body).toHaveProperty("name", newUser.username);
           expect(res.body).toHaveProperty("email", newUser.email);
+          done();
+        });
+    });
+
+    test("should return console log error when failed to send email", (done) => {
+      const sendMock = jest.fn((_, cb) => cb(null, true));
+      transporter.sendMail.mockImplementationOnce(sendMock);
+      request(app)
+        .post("/buyers/register")
+        .send(newBuyer)
+        .end(function (err, res) {
+          if (err) done(err);
+          expect(sendMock).toHaveBeenCalled();
           done();
         });
     });
@@ -467,6 +487,22 @@ describe("Buyer login routes", () => {
         .catch((err) => {
           done(err);
         });
+    });
+
+    test("should return correct response (401) when buyer is not registered", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await login(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+    });
+
+    test("should return correct response (401) when buyer password is not correct", async () => {
+      const mReq = { body: { email: "buyer@mail.com", password: "12" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await login(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
     });
 
     test("should return correct response (401) when buyers password is not correct", (done) => {
