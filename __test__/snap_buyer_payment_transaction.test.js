@@ -92,18 +92,18 @@ describe("Payment transaction from buyer using full payment", () => {
       updatedAt: new Date(),
     };
 
-    let brand = {
-      name: "Ford",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let brand = {
+    //   name: "Ford",
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
-    let type = {
-      modelName: "Sedan",
-      BrandId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    // let type = {
+    //   modelName: "Sedan",
+    //   BrandId: 1,
+    //   createdAt: new Date(),
+    //   updatedAt: new Date(),
+    // };
 
     queryInterface
       .bulkDelete("Cars", null, {
@@ -116,12 +116,6 @@ describe("Payment transaction from buyer using full payment", () => {
       })
       .then(() => {
         return Dealer.create(dealer);
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Brands", [brand], {});
-      })
-      .then(() => {
-        return queryInterface.bulkInsert("Types", [type], {});
       })
       .then(() => done())
       .catch((err) => done(err));
@@ -136,20 +130,6 @@ describe("Payment transaction from buyer using full payment", () => {
       })
       .then(() => {
         return queryInterface.bulkDelete("Dealers", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Types", null, {
-          truncate: true,
-          cascade: true,
-          restartIdentity: true,
-        });
-      })
-      .then(() => {
-        return queryInterface.bulkDelete("Brands", null, {
           truncate: true,
           cascade: true,
           restartIdentity: true,

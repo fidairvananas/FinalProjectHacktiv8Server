@@ -1,4 +1,4 @@
-const { Dealer, Car } = require("../models");
+const { Dealer, Car, Type, Brand } = require("../models");
 const { generateToken } = require("../helpers/jwt");
 const { comparePassword } = require("../helpers/bcrypt");
 
@@ -8,10 +8,29 @@ const getDealer = async (req, res, next) => {
   try {
     const { id } = req.params;
     const dealer = await Dealer.findByPk(id, {
-      attributes: { exclude: ["password"] },
+      attributes: { exclude: ["password", "createdAt", "updatedAt"] },
       include: [
         {
           model: Car,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+          include: [
+            {
+              model: Type,
+              attributes: {
+                exclude: ["createdAt", "updatedAt"],
+              },
+              include: [
+                {
+                  model: Brand,
+                  attributes: {
+                    exclude: ["createdAt", "updatedAt"],
+                  },
+                },
+              ],
+            },
+          ],
         },
       ],
     });
@@ -90,6 +109,9 @@ const login = async (req, res, next) => {
 
         res.status(200).json({
           message: "login Succesful",
+          id: foundDealer.id,
+          email: foundDealer.email,
+          name: foundDealer.name,
           access_token: generateToken(payload),
         });
       } else {

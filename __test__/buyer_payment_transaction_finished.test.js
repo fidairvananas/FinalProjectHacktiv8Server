@@ -98,18 +98,18 @@ beforeAll((done) => {
     updatedAt: new Date(),
   };
 
-  let brand = {
-    name: "Ford",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+  // let brand = {
+  //   name: "Ford",
+  //   createdAt: new Date(),
+  //   updatedAt: new Date(),
+  // };
 
-  let type = {
-    modelName: "Sedan",
-    BrandId: 1,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+  // let type = {
+  //   modelName: "Sedan",
+  //   BrandId: 1,
+  //   createdAt: new Date(),
+  //   updatedAt: new Date(),
+  // };
 
   let car = {
     name: "Mustang G5",
@@ -132,12 +132,6 @@ beforeAll((done) => {
     .bulkInsert("Buyers", buyer, {})
     .then(() => {
       return Dealer.create(dealer);
-    })
-    .then(() => {
-      return queryInterface.bulkInsert("Brands", [brand], {});
-    })
-    .then(() => {
-      return queryInterface.bulkInsert("Types", [type], {});
     })
     .then(() => {
       return Car.create(car);
@@ -225,20 +219,6 @@ afterAll((done) => {
     })
     .then(() => {
       return queryInterface.bulkDelete("Cars", null, {
-        truncate: true,
-        cascade: true,
-        restartIdentity: true,
-      });
-    })
-    .then(() => {
-      return queryInterface.bulkDelete("Brands", null, {
-        truncate: true,
-        cascade: true,
-        restartIdentity: true,
-      });
-    })
-    .then(() => {
-      return queryInterface.bulkDelete("Types", null, {
         truncate: true,
         cascade: true,
         restartIdentity: true,
