@@ -14,12 +14,15 @@ const {
 
 const getCars = async (req, res, next) => {
   try {
-    const { page } = req.query;
-    const perPage = 10;
+    const { page, maxItem } = req.query;
+    let perPage = 12;
+    if (maxItem) {
+      perPage = maxItem;
+    }
     const query = {};
 
     if (page > 0) {
-      (query.limit = perPage), (query.offset = (page - 1) * 10);
+      (query.limit = perPage), (query.offset = (page - 1) * perPage);
     }
 
     const cars = await Car.findAndCountAll({

@@ -12,42 +12,43 @@ jest.mock("../helpers/nodemailer", () => {
 
 let access_token;
 
-beforeAll((done) => {
-  let data = {
-    name: "Ford Mustang G5",
-    description: "This is sport car",
-    fuel: "Solar",
-    seats: 2,
-    mileage: 12000,
-    price: 1000000,
-    color: "black",
-    yearMade: "1989-04-23T18:25:43.511Z",
-    TypeId: 5,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  queryInterface
-    .bulkInsert("Cars", [data], {})
-    .then((res) => {
-      done();
-    })
-    .catch((err) => {
-      done(err);
-    });
-});
-
-afterAll((done) => {
-  queryInterface
-    .bulkDelete("Cars", null, {})
-    .then((res) => {
-      done();
-    })
-    .catch((err) => {
-      done(err);
-    });
-});
 
 describe("Register dealer routes", () => {
+  beforeAll((done) => {
+    let data = {
+      name: "Ford Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000,
+      color: "black",
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    queryInterface
+      .bulkInsert("Cars", [data], {})
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+  
+  afterAll((done) => {
+    queryInterface
+      .bulkDelete("Cars", null, {})
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+  
   describe("POST /dealers/register - success test", () => {
     let newDealer = {
       name: "Dealer",
@@ -384,10 +385,45 @@ describe("Dealer login routes", () => {
 // Car test
 
 describe("Car routes", () => {
+  beforeAll((done) => {
+    let data = {
+      name: "Ford Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000,
+      color: "black",
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    queryInterface
+      .bulkInsert("Cars", [data], {})
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+  
+  afterAll((done) => {
+    queryInterface
+      .bulkDelete("Cars", null, {})
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+  
   describe("GET /cars - success test", () => {
     it("should return correct response (200) with cars data", (done) => {
       request(app)
-        .get("/cars")
+        .get("/cars?page=1&maxItem=6")
         .then((res) => {
           expect(res.status).toBe(200);
           expect(res.body).toBeInstanceOf(Array);

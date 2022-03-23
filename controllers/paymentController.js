@@ -1,4 +1,5 @@
-const { snap, core } = require("../API/MidtransAPI");
+const core = require("../API/core_MidtransAPI");
+const snap = require('../API/snap_MidtransAPI')
 const {
   BoughtHistory,
   Buyer,
@@ -8,8 +9,7 @@ const {
   Brand,
   sequelize,
 } = require("../models");
-const add = require("date-fns/add");
-const { format } = require("date-fns");
+const { format, add } = require("date-fns");
 
 //! CASH PAYMENT
 const payment = async (req, res, next) => {
@@ -21,20 +21,20 @@ const payment = async (req, res, next) => {
     if (!quantity) {
       throw {
         code: 400,
-        name: "SequelizeValidationError",
+        name: "BAD_REQUEST",
         message: "Quantity can't be empty.",
       };
     }
 
-    const buyer = await Buyer.findByPk(buyerId);
-
-    if (!buyer) {
+    if (!carId) {
       throw {
-        code: 404,
-        name: "NOT_FOUND",
-        message: "Please register first before buy.",
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Car ID can't be empty.",
       };
     }
+
+    const buyer = await Buyer.findByPk(buyerId);
 
     const car = await Car.findOne({
       where: {
@@ -63,8 +63,8 @@ const payment = async (req, res, next) => {
 
     if (car.status == "pending") {
       throw {
-        code: 400,
-        name: "UNAUTHORIZED",
+        code: 403,
+        name: "FORBIDDEN",
         message: "Car status pending payment for other transaction.",
       };
     }
@@ -182,14 +182,6 @@ const payment = async (req, res, next) => {
 
     let data = await snap.createTransaction(parameter);
 
-    if (!data.token) {
-      throw {
-        code: 403,
-        name: "FORBIDDEN",
-        message: "Access denied.",
-      };
-    }
-
     await Car.update(
       {
         status: "pending",
@@ -235,6 +227,14 @@ const status = async (req, res, next) => {
   try {
     const { BuyerId } = req.query;
 
+    if (!BuyerId) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Buyer ID can't be empty.",
+      };
+    }
+
     const buyer = await Buyer.findByPk(BuyerId);
 
     if (!buyer) {
@@ -253,13 +253,16 @@ const status = async (req, res, next) => {
         ["id", "DESC"],
         ["BuyerId", "ASC"],
       ],
+      attibutes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
     });
 
-    if (!history) {
+    if (!history.length) {
       throw {
         code: 404,
         name: "NOT_FOUND",
-        message: "Bought history from: " + buyer.name + " not found.",
+        message: "Bought history not found.",
       };
     }
 
@@ -273,8 +276,23 @@ const status = async (req, res, next) => {
 const updatePayment = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
+    if (!req.params.id) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Buyer ID can't be empty.",
+      };
+    }
     const { id } = req.params;
     const { saved_token_id, CarId } = req.body;
+
+    if (!CarId) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Car ID can't be empty.",
+      };
+    }
 
     const history = await BoughtHistory.findAll({
       where: {
@@ -290,14 +308,6 @@ const updatePayment = async (req, res, next) => {
         name: "UNAUTHORIZED",
         message: "Please check your input update payment.",
       };
-    } else {
-      if (history.length > 1) {
-        throw {
-          code: 400,
-          name: "UNAUTHORIZED",
-          message: "Please check your input update payment.",
-        };
-      }
     }
 
     let data = {
@@ -338,11 +348,53 @@ const updatePayment = async (req, res, next) => {
 const firstInstallment = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
+    if (!req.params.id) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Buyer ID can't be empty.",
+      };
+    }
+
     const { id: CarId } = req.params;
     const { token_id, term, dp } = req.body;
     const buyerId = req.loginBuyer.id;
 
+    if (!term) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Term can't be empty.",
+      };
+    }
+
+    if (+term > 60) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Term can't more than 60 times.",
+      };
+    }
+
+    if (!dp) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Down Payment can't be empty.",
+      };
+    }
+
     const car = await Car.findByPk(+CarId);
+
+    if (car) {
+      if (dp > car.price) {
+        throw {
+          code: 400,
+          name: "BAD_REQUEST",
+          message: "Down Payment can't extent car price.",
+        };
+      }
+    }
 
     if (!car || car.status == "sold") {
       throw {
@@ -361,14 +413,6 @@ const firstInstallment = async (req, res, next) => {
     }
 
     const buyer = await Buyer.findByPk(buyerId);
-
-    if (!buyer) {
-      throw {
-        code: 404,
-        name: "NOT_FOUND",
-        message: "Buyer not found.",
-      };
-    }
 
     const checkCar = await BoughtHistory.findAll({
       where: {
@@ -395,12 +439,104 @@ const firstInstallment = async (req, res, next) => {
       "yyyy-MM-dd hh:mm:ss " + "+0700"
     );
 
+    const history = await BoughtHistory.create(
+      {
+        carName: car.name,
+        description: car.description,
+        boughtDate: new Date(),
+        paidOff: false,
+        price: car.price,
+        BuyerId: buyerId,
+        orderId: "OTOSIC-0" + car.id + "-" + new Date().getTime() + "-0",
+        CarId: car.id,
+        installment: true,
+        currentInstallment: 1,
+        totalInstallment: term,
+        saved_token_id: "NULL",
+      },
+      {
+        transaction: t,
+      }
+    );
+
+    const payload = {
+      payment_type: "credit_card",
+      transaction_details: {
+        order_id: history.orderId,
+        gross_amount: dp,
+      },
+      credit_card: {
+        secure: true,
+        installment: {
+          required: false,
+          terms: {
+            bni: [3, 6, 12, 18, 24, 36, 48, 60],
+            mandiri: [3, 6, 12, 18, 24, 36, 48, 60],
+            cimb: [3, 6, 12, 18, 24, 36, 48, 60],
+            bca: [3, 6, 12, 18, 24, 36, 48, 60],
+            offline: [3, 6, 12, 18, 24, 36, 48, 60],
+          }
+        },
+      },
+      enabled_payments: [
+        "credit_card",
+        "mandiri_clickpay",
+        "cimb_clicks",
+        "bca_klikbca",
+        "bca_klikpay",
+        "bri_epay",
+        "echannel",
+        "mandiri_ecash",
+        "bca_va",
+        "bni_va",
+        "other_va",
+        "gopay",
+        "indomaret",
+        "alfamart",
+        "danamon_online",
+        "akulaku",
+      ],
+      schedule: {
+        interval: 1,
+        interval_unit: "month",
+        max_interval: 1,
+        start_time: new Date(),
+      },
+      item_details: [
+        {
+          id: car.id,
+          price: dp,
+          quantity: 1,
+          name: car.name,
+        },
+      ],
+      customer_details: {
+        username: buyer.username,
+        email: buyer.email,
+        phone: buyer.phoneNumber,
+        billing_address: {
+          username: buyer.username,
+          email: buyer.email,
+          phone: buyer.phoneNumber,
+          address: buyer.address,
+        },
+        shipping_address: {
+          username: buyer.username,
+          email: buyer.email,
+          phone: buyer.phoneNumber,
+          address: buyer.address,
+        },
+      },
+    };
+
+    let payment = await snap.createTransaction(payload);
+
     let parameter = {
       name,
       amount: installment.toString(),
       currency: "IDR",
       payment_type: "credit_card",
-      token: token_id,
+      token: payment.token,
       schedule: {
         interval: 1,
         interval_unit: "month",
@@ -435,65 +571,7 @@ const firstInstallment = async (req, res, next) => {
       }
     );
 
-    const history = await BoughtHistory.create(
-      {
-        carName: car.name,
-        description: car.description,
-        boughtDate: new Date(),
-        paidOff: false,
-        price: car.price,
-        BuyerId: buyerId,
-        orderId: "OTOSIC-0" + car.id + "-" + new Date().getTime() + "-0",
-        CarId: car.id,
-        installment: true,
-        currentInstallment: 1,
-        totalInstallment: term,
-        saved_token_id: "NULL",
-      },
-      {
-        transaction: t,
-      }
-    );
-
-    const payload = {
-      payment_type: "credit_card",
-      transaction_details: {
-        order_id: history.orderId,
-        gross_amount: +resp.amount,
-      },
-      credit_card: {
-        token_id,
-        authentication: true,
-        save_token_id: true,
-      },
-      item_details: [
-        {
-          id: car.id,
-          price: +resp.amount,
-          quantity: 1,
-          name: car.name,
-        },
-      ],
-      customer_details: {
-        username: buyer.username,
-        email: buyer.email,
-        phone: buyer.phoneNumber,
-        billing_address: {
-          username: buyer.username,
-          email: buyer.email,
-          phone: buyer.phoneNumber,
-          address: buyer.address,
-        },
-        shipping_address: {
-          username: buyer.username,
-          email: buyer.email,
-          phone: buyer.phoneNumber,
-          address: buyer.address,
-        },
-      },
-    };
-
-    let payment = await core.charge(payload);
+    console.log(payment, "<<<<< PAYMENT 1st")
 
     res.status(200).json({
       message: payment.status_message,
@@ -512,9 +590,25 @@ const firstInstallment = async (req, res, next) => {
 const nextInstallment = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
-    const { token_id, CarId } = req.body;
+    const { CarId } = req.body;
+
+    if (!CarId) {
+      throw {
+        code: 400,
+        name: "BAD_REQUEST",
+        message: "Car ID can't be empty.",
+      };
+    }
 
     const car = await Car.findByPk(+CarId);
+
+    if (!car) {
+      throw {
+        code: 404,
+        name: "NOT_FOUND",
+        message: "Car not found.",
+      };
+    }
 
     const history = await BoughtHistory.findAll({
       where: {
@@ -523,7 +617,7 @@ const nextInstallment = async (req, res, next) => {
       order: [["id", "DESC"]],
     });
 
-    if (history.length >= history[0].totalInstallment) {
+    if (history.length >= history[0].totalInstallment + 1) {
       throw {
         code: 403,
         name: "FORBIDDEN",
@@ -619,9 +713,7 @@ const nextInstallment = async (req, res, next) => {
         gross_amount: +resp.amount,
       },
       credit_card: {
-        token_id,
-        authentication: true,
-        save_token_id: true,
+        secure: true,
       },
       item_details: [
         {
@@ -648,9 +740,31 @@ const nextInstallment = async (req, res, next) => {
           address: buyer.address,
         },
       },
+      credit_card: {
+        secure: true,
+      },
+      enabled_payments: [
+        "credit_card",
+        "mandiri_clickpay",
+        "cimb_clicks",
+        "bca_klikbca",
+        "bca_klikpay",
+        "bri_epay",
+        "echannel",
+        "mandiri_ecash",
+        "bca_va",
+        "bni_va",
+        "other_va",
+        "gopay",
+        "indomaret",
+        "alfamart",
+        "danamon_online",
+        "akulaku",
+      ]
     };
 
-    let payment = await core.charge(payload);
+    let payment = await snap.createTransaction(payload);
+    console.log(payment, '<<<< PAYMENT')
 
     res
       .status(200)

@@ -11,6 +11,12 @@ const {
 const { queryInterface } = sequelize;
 const { login } = require("../controllers/adminController");
 const { getInspections } = require("../controllers/inspectionController");
+const { generateToken } = require("../helpers/jwt");
+const { getExteriors } = require("../controllers/exteriorController");
+const { getInteriors } = require("../controllers/interiorController");
+
+const { getKolongs } = require("../controllers/kolongController");
+const { getRoadTests } = require("../controllers/roadtestController");
 
 let newAdmin = {
   name: "Admin",
@@ -21,59 +27,12 @@ let newAdmin = {
 
 let access_token;
 
-beforeAll((done) => {
-  let data = {
-    id: 2,
-    name: "Ford Mustang G5",
-    description: "This is sport car",
-    fuel: "Solar",
-    seats: 2,
-    mileage: 12000,
-    price: 1000000,
-    color: "black",
-    yearMade: "1989-04-23T18:25:43.511Z",
-    TypeId: 5,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  let inspection = {
-    id: 1,
-    mainInspection: false,
-    exteriorInspection: false,
-    interiorInspection: false,
-    roadTest: false,
-    kolongTest: false,
-    CarId: 2,
-    inspectedBy: "Admin",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
-  queryInterface
-    .bulkInsert("Cars", [data], {})
-    .then((res) => {
-      return queryInterface.bulkInsert("Inspections", [inspection], {});
-    })
-    .then((res) => {
-      done();
-    })
-    .catch((err) => {
-      done(err);
-    });
-});
-
-afterAll((done) => {
-  queryInterface
-    .bulkDelete("Cars", null, {})
-    .then((res) => {
-      return queryInterface.bulkDelete("Inspections", null, {});
-    })
-    .then((res) => {
-      done();
-    })
-    .catch((err) => {
-      done(err);
-    });
+afterAll(async () => {
+  await queryInterface.bulkDelete("Admins", null, {
+    truncate: true,
+    cascade: true,
+    restartIdentity: true,
+  });
 });
 
 describe("Admin register routes", () => {
@@ -274,6 +233,60 @@ describe("Admin login routes", () => {
 // Inspections test
 
 describe("Inspection test", () => {
+  beforeAll((done) => {
+    let data = {
+      id: 2,
+      name: "Ford Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000,
+      color: "black",
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    let inspection = {
+      id: 1,
+      mainInspection: false,
+      exteriorInspection: false,
+      interiorInspection: false,
+      roadTest: false,
+      kolongTest: false,
+      CarId: 2,
+      inspectedBy: "Admin",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    queryInterface
+      .bulkInsert("Cars", [data], {})
+      .then((res) => {
+        return queryInterface.bulkInsert("Inspections", [inspection], {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  afterAll((done) => {
+    queryInterface
+      .bulkDelete("Cars", null, {})
+      .then((res) => {
+        return queryInterface.bulkDelete("Inspections", null, {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
   describe("GET /inspections - success test", () => {
     test("should return correct response (200) when reads all inspections", (done) => {
       request(app)
@@ -352,14 +365,20 @@ describe("Inspection test", () => {
   });
 
   describe("PATCH /cars - failed test", () => {
+    let data = {
+      id: 3,
+      name: "dealer",
+      phoneNumber: "0812345678",
+      email: "testDealer@mail.com",
+      storeName: "Car store",
+      storeAddress: "Jakarta",
+    };
+    let token = generateToken(data);
     test("should return correct response (401) when other user than admin tring to change inspection status", (done) => {
       request(app)
         .patch("/cars/2")
         .send({ passedInspection: true })
-        .set(
-          "access_token",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJqdWJlbHNpbmFnYTEzQGdtYWlsLmNvbSIsInN0b3JlTmFtZSI6Ikp1YmVsIENsYXNzaWMiLCJwaG9uZU51bWJlciI6IjA4MTMxMTEwNzk1NCIsInN0b3JlQWRkcmVzcyI6Ik1lZGFuIGhlbHZldGlhIiwiaWF0IjoxNjQ3NzQ0MjM0fQ.z5ug_zyNO_MKZxiuChN8cGst6KweYvI9Phv6yIwaZXc"
-        )
+        .set("access_token", token)
         .then((res) => {
           expect(res.status).toBe(401);
           expect(res.body).toHaveProperty("message", "Invalid token or user");
@@ -409,14 +428,20 @@ describe("Inspection test", () => {
   });
 
   describe("PATCH /inspections - failed test", () => {
+    let data = {
+      id: 3,
+      name: "dealer",
+      phoneNumber: "0812345678",
+      email: "testDealer@mail.com",
+      storeName: "Car store",
+      storeAddress: "Jakarta",
+    };
+    let token = generateToken(data);
     test("should return correct response (401) when other user than admin trying to change inspection status", (done) => {
       request(app)
         .patch("/inspections/1")
         .send({ mainInspection: true, exteriorInspection: true })
-        .set(
-          "access_token",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ikp1YmVsIiwiZW1haWwiOiJqdWJlbHNpbmFnYTEzQGdtYWlsLmNvbSIsInN0b3JlTmFtZSI6Ikp1YmVsIENsYXNzaWMiLCJwaG9uZU51bWJlciI6IjA4MTMxMTEwNzk1NCIsInN0b3JlQWRkcmVzcyI6Ik1lZGFuIGhlbHZldGlhIiwiaWF0IjoxNjQ3NzQ0MjM0fQ.z5ug_zyNO_MKZxiuChN8cGst6KweYvI9Phv6yIwaZXc"
-        )
+        .set("access_token", token)
         .then((res) => {
           expect(res.status).toBe(401);
           expect(res.body).toHaveProperty("message", "Invalid token or user");
@@ -447,6 +472,60 @@ describe("Inspection test", () => {
 // interior test
 
 describe("Interior routes", () => {
+  beforeAll((done) => {
+    let data = {
+      id: 2,
+      name: "Ford Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000,
+      color: "black",
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    let inspection = {
+      id: 1,
+      mainInspection: false,
+      exteriorInspection: false,
+      interiorInspection: false,
+      roadTest: false,
+      kolongTest: false,
+      CarId: 2,
+      inspectedBy: "Admin",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    queryInterface
+      .bulkInsert("Cars", [data], {})
+      .then((res) => {
+        return queryInterface.bulkInsert("Inspections", [inspection], {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  afterAll((done) => {
+    queryInterface
+      .bulkDelete("Cars", null, {})
+      .then((res) => {
+        return queryInterface.bulkDelete("Inspections", null, {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
   beforeEach(async () => {
     let interior = {
       id: 3,
@@ -465,6 +544,33 @@ describe("Interior routes", () => {
   afterEach(async () => {
     await Interior.destroy({ where: { id: 3 } });
   });
+
+  describe("GET /inspections/interior-detail - success test", () => {
+    test("should return correct response(200) with interiors data", (done) => {
+      request(app)
+        .get("/inspections/interior-detail")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /inspections/interior-detail - failed test", () => {
+    test("should return correct response(200) with interiors data", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getInteriors(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
+    });
+  });
+
   describe("PATCH /inspections/interior-detail -- success test", () => {
     it("should return correct response (200) admin update inspection status", (done) => {
       request(app)
@@ -531,6 +637,60 @@ describe("Interior routes", () => {
 // exterior test
 
 describe("Exterior routes", () => {
+  beforeAll((done) => {
+    let data = {
+      id: 2,
+      name: "Ford Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000,
+      color: "black",
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    let inspection = {
+      id: 1,
+      mainInspection: false,
+      exteriorInspection: false,
+      interiorInspection: false,
+      roadTest: false,
+      kolongTest: false,
+      CarId: 2,
+      inspectedBy: "Admin",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    queryInterface
+      .bulkInsert("Cars", [data], {})
+      .then((res) => {
+        return queryInterface.bulkInsert("Inspections", [inspection], {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  afterAll((done) => {
+    queryInterface
+      .bulkDelete("Cars", null, {})
+      .then((res) => {
+        return queryInterface.bulkDelete("Inspections", null, {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
   beforeEach(async () => {
     let exterior = {
       id: 10,
@@ -549,6 +709,32 @@ describe("Exterior routes", () => {
   });
   afterEach(async () => {
     await Exterior.destroy({ where: { id: 10 } });
+  });
+
+  describe("GET /inspections/exterior-detail - success test", () => {
+    test("should return correct response(200) with exteriors data", (done) => {
+      request(app)
+        .get("/inspections/exterior-detail")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /inspections/exterior-detail - failed test", () => {
+    test("should return correct response(200) with exteriors data", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getExteriors(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
+    });
   });
 
   describe("PATCH /inspections/exterior-detail/:id -- success test", () => {
@@ -619,6 +805,60 @@ describe("Exterior routes", () => {
 //Kolong test
 
 describe("Kolong test routes", () => {
+  beforeAll((done) => {
+    let data = {
+      id: 2,
+      name: "Ford Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000,
+      color: "black",
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    let inspection = {
+      id: 1,
+      mainInspection: false,
+      exteriorInspection: false,
+      interiorInspection: false,
+      roadTest: false,
+      kolongTest: false,
+      CarId: 2,
+      inspectedBy: "Admin",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    queryInterface
+      .bulkInsert("Cars", [data], {})
+      .then((res) => {
+        return queryInterface.bulkInsert("Inspections", [inspection], {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  afterAll((done) => {
+    queryInterface
+      .bulkDelete("Cars", null, {})
+      .then((res) => {
+        return queryInterface.bulkDelete("Inspections", null, {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
   beforeEach(async () => {
     let kolong = {
       id: 10,
@@ -640,6 +880,32 @@ describe("Kolong test routes", () => {
 
   afterEach(async () => {
     await Kolong.destroy({ where: { id: 10 } });
+  });
+
+  describe("GET /inspections/kolong-detail - success test", () => {
+    test("should return correct response(200) with kolongs data", (done) => {
+      request(app)
+        .get("/inspections/kolong-detail")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /inspections/kolong-detail - failed test", () => {
+    test("should return correct response(200) with kolongs data", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getKolongs(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
+    });
   });
 
   describe("PATCH /inspections/kolong-detail -- success test", () => {
@@ -710,6 +976,60 @@ describe("Kolong test routes", () => {
 // Road test routes
 
 describe("Road test routes", () => {
+  beforeAll((done) => {
+    let data = {
+      id: 2,
+      name: "Ford Mustang G5",
+      description: "This is sport car",
+      fuel: "Solar",
+      seats: 2,
+      mileage: 12000,
+      price: 1000000,
+      color: "black",
+      yearMade: "1989-04-23T18:25:43.511Z",
+      TypeId: 5,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    let inspection = {
+      id: 1,
+      mainInspection: false,
+      exteriorInspection: false,
+      interiorInspection: false,
+      roadTest: false,
+      kolongTest: false,
+      CarId: 2,
+      inspectedBy: "Admin",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    queryInterface
+      .bulkInsert("Cars", [data], {})
+      .then((res) => {
+        return queryInterface.bulkInsert("Inspections", [inspection], {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  afterAll((done) => {
+    queryInterface
+      .bulkDelete("Cars", null, {})
+      .then((res) => {
+        return queryInterface.bulkDelete("Inspections", null, {});
+      })
+      .then((res) => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
   beforeEach(async () => {
     let roadtest = {
       id: 3,
@@ -726,6 +1046,32 @@ describe("Road test routes", () => {
 
   afterEach(async () => {
     await RoadTest.destroy({ where: { id: 3 } });
+  });
+
+  describe("GET /inspections/roadtest-detail - success test", () => {
+    test("should return correct response(200) with roadtests data", (done) => {
+      request(app)
+        .get("/inspections/roadtest-detail")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toBeInstanceOf(Array);
+          done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+  });
+
+  describe("GET /inspections/roadtest-detail - failed test", () => {
+    test("should return correct response(200) with roadtests data", async () => {
+      const mReq = { body: { email: "test@mail.com", password: "12345" } };
+      const mRes = {};
+      const mNext = jest.fn();
+      await getRoadTests(mReq, mRes, mNext);
+      expect(mNext).toBeCalledWith(expect.anything());
+      expect(mRes).toBeInstanceOf(Object);
+    });
   });
 
   describe("PATCH /inspections/roadtest-detail -- success test", () => {
